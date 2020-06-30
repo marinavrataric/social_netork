@@ -13,6 +13,8 @@ const User = require('../models/User')
 
 router.post('/', (req, res) => {
 
+    console.log(req.body)
+
     const { first_name, last_name, email, password } = req.body
 
     // Filed validation
@@ -33,11 +35,9 @@ router.post('/', (req, res) => {
 
             // Create hash and salt
             bcrypt.genSalt(10, (err, salt) => {
-                if (err) throw err
 
                 bcrypt.hash(newUser.password, salt, (err, hash) => {
-                    if (err) throw err
-
+                  
                     newUser.password = hash
 
                     newUser

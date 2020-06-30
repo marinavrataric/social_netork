@@ -1,0 +1,25 @@
+.nav {
+    background-color: rgb(43, 43, 43);
+    /* position: fixed;
+    top: 0;
+    width: 100%; */
+}
+.nav-item {
+    padding: 15px;
+}
+.nav-link {
+    color: white;
+    font-size: 19px;
+    font-family: 'Raleway', sans-serif;
+}
+.nav-link:hover {
+    color: rgb(35, 204, 255);
+}
+.nav-right {
+    position: absolute;
+    right: 0px;
+    margin-right: 20px;
+}
+.nav-left {
+    margin-left: 20px;
+}

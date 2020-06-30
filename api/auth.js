@@ -59,7 +59,19 @@ router.get('/user', auth, (req, res) => {
     User
         .findById(req.user.id)
         .select('-password')
-        .then(user => res.json({user}))
+        .then(user => res.json({ user }))
+})
+
+
+// @route   GET /api/auth/users
+// @desc    Get all users
+// @access  Private
+
+router.get('/users', auth, (req, res) => {
+    User
+        .find()
+        .sort({ registration_date: -1 })
+        .then(user => res.json(user))
 })
 
 module.exports = router
