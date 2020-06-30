@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Nav, NavItem } from 'reactstrap'
 import './router.css'
@@ -23,25 +23,43 @@ function Links() {
                 </div>
                 <div className="nav nav-right">
                     <NavItem className="nav-item">
-                        <NavLink
-                            to="/findPeople"
-                            className="nav-link"
-                            activeStyle={{ color: "rgb(35, 204, 255)" }}
-                        >Find people</NavLink>
+                        {state.isAuthenticated ?
+                            <NavLink
+                                to="/findPeople"
+                                className="nav-link"
+                                activeStyle={{ color: "rgb(35, 204, 255)" }}
+                            >Find people</NavLink>
+                            : <NavLink
+                                to="/"
+                                className="nav-link"
+                            >Find people</NavLink>
+                        }
                     </NavItem>
                     <NavItem className="nav-item">
-                        <NavLink
-                            to="/posts"
-                            className="nav-link"
-                            activeStyle={{ color: "rgb(35, 204, 255)" }}
-                        >Posts</NavLink>
+                        {state.isAuthenticated ?
+                            <NavLink
+                                to="/posts"
+                                className="nav-link"
+                                activeStyle={{ color: "rgb(35, 204, 255)" }}
+                            >Posts</NavLink>
+                            : <NavLink
+                                to="/"
+                                className="nav-link"
+                            >Posts</NavLink>
+                        }
                     </NavItem>
                     <NavItem className="nav-item">
-                        <NavLink
-                            to="/myProfile"
-                            className="nav-link"
-                            activeStyle={{ color: "rgb(35, 204, 255)" }}
-                        >My profile</NavLink>
+                        {state.isAuthenticated ?
+                            <NavLink
+                                to="/myProfile"
+                                className="nav-link"
+                                activeStyle={{ color: "rgb(35, 204, 255)" }}
+                            >My profile</NavLink>
+                            :
+                            <NavLink
+                                to="/"
+                                className="nav-link"
+                            >My profile</NavLink>}
                     </NavItem>
                     {state.isAuthenticated && <NavItem className="nav-item">
                         <NavLink

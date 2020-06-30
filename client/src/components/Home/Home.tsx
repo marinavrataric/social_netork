@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import './home.css'
 import Register from '../modals/Register'
 import Login from '../modals/Login'
@@ -25,7 +25,7 @@ function Home() {
                 >Sign In</button>
             </div>
             {modalSignUp && <Register toggle={toggleSignUp} modal={modalSignUp} />}
-            {modalSignIn && <Login toggle={toggleSignIn} />}
+            {modalSignIn && <Login toggle={toggleSignIn} modal={modalSignIn} />}
         </div>
     )
 }

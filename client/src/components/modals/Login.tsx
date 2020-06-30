@@ -9,16 +9,12 @@ function Login(props: any) {
     const [password, setPassword] = useState('')
     const [errorMsg, setErrorMsg] = useState('')
 
-    const { token, setToken, state, dispatch } = useContext(AppContext)
+    const { setToken, dispatch } = useContext(AppContext)
 
     const loginUser = (e: any) => {
-        props.toggle(true)
-
-        const config: any = {
-            header: {
-                'Content-Type': 'application/json'
-            }
-        }
+        e.preventDefault()
+        
+        const config: any = { header: { 'Content-Type': 'application/json' } }
         const user = {
             email,
             password
@@ -28,10 +24,12 @@ function Login(props: any) {
             .then(res => {
                 setToken(res.data.token)
                 dispatch({ type: 'LOGIN_SUCCESS', payload: res.data })
+                props.toggle(false)
             })
             .catch(err => {
+                setErrorMsg(err.response.data.msg)
+                console.log('ovo', err.response.data.msg)
                 dispatch({ type: 'LOGIN_FAILED' })
-                setErrorMsg(err.response.data)
             })
     }
 
@@ -39,9 +37,12 @@ function Login(props: any) {
         props.toggle(false)
     }
 
+    console.log('error:', errorMsg)
+
     return (
-        <Modal isOpen={true} toggle={props.toggle}>
-            <Alert color="warning">{errorMsg}</Alert>
+        <Modal isOpen={props.modal} toggle={props.toggle} backdrop="static">
+            {errorMsg && <Alert color="warning">{errorMsg}</Alert>}
+
             <ModalHeader>Sign In</ModalHeader>
             <ModalBody>
                 <FormGroup>
@@ -63,6 +64,7 @@ function Login(props: any) {
                 <Button
                     color="success"
                     onClick={loginUser}
+                    disabled={!email || !password}
                 >Sign In</Button>
                 <Button
                     color="danger"

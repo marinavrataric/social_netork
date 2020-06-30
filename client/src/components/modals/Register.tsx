@@ -12,7 +12,7 @@ function Register(props: any) {
 
     const [errorMsg, setErrorMsg] = useState('')
 
-    const { state, dispatch } = useContext(AppContext)
+    const { dispatch, setToken } = useContext(AppContext)
 
     const validateSignUp = (e: any) => {
         e.preventDefault()
@@ -28,18 +28,14 @@ function Register(props: any) {
         axios
             .post('/api/users', user, config)
             .then(res => {
+                setToken(res.data.token)
                 dispatch({ type: 'REGISTER_SUCCESS', payload: res.data })
+                props.toggle(false)
             })
             .catch(err => {
-                setErrorMsg(err.response.data)
+                setErrorMsg(err.response.data.msg)
                 dispatch({ type: "REGISTER_FAILED" })
             })
-
-        if (firstName === '') {
-            props.toggle(false)
-        } else {
-            props.toggle(true)
-        }
     }
 
     const closeRegisterModal = () => {
@@ -47,7 +43,7 @@ function Register(props: any) {
     }
 
     return (
-        <Modal isOpen={props.modal} toggle={props.toggle}>
+        <Modal isOpen={props.modal} toggle={props.toggle} backdrop="static">
             {errorMsg && <Alert color="warning">{errorMsg}</Alert>}
 
             <ModalHeader>Sign Up</ModalHeader>
@@ -85,6 +81,7 @@ function Register(props: any) {
                 <Button
                     color="success"
                     onClick={validateSignUp}
+                    disabled={!firstName || !lastName || !email || !password}
                 >Sign Up</Button>
                 <Button
                     color="danger"

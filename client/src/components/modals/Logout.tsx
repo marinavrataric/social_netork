@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { ModalBody, ModalHeader, ModalFooter, Button, Modal } from 'reactstrap'
 import { AppContext } from '../context/AppContext'
+import { useHistory } from "react-router-dom";
 
 function Logout() {
 
@@ -8,18 +9,22 @@ function Logout() {
 
     const toggle = () => setLogoutModal(!logoutModal)
 
+    const history = useHistory()
+
     const logoutUser = () => {
         dispatch({ type: 'LOG_OUT_USER' })
         localStorage.removeItem('token')
         toggle()
+        history.push('/')
     }
 
     const cancelLogout = () => {
         toggle()
+        history.goBack()
     }
 
     return (
-        <Modal isOpen={logoutModal} toggle={toggle}>
+        <Modal isOpen={logoutModal} toggle={toggle} backdrop="static">
             <ModalHeader>Log out</ModalHeader>
             <ModalBody>Are you sure you want to log out?</ModalBody>
             <ModalFooter>

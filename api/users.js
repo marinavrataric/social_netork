@@ -24,7 +24,7 @@ router.post('/', (req, res) => {
     User
         .findOne({ email })
         .then(user => {
-            if (user) res.status(400).json({ msg: `Email ${email} is already in use.` })
+            if (user) res.status(400).json({ msg: `Email '${email}' is already in use.` })
 
             const newUser = new User({
                 first_name: first_name,
