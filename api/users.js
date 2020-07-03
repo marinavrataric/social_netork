@@ -7,14 +7,44 @@ const config = require('config')
 
 const User = require('../models/User')
 
-router.put('/:id', (req, res) => {
-    User.findByIdAndUpdate({_id:req.params.id}, req.body).then(function(){
-        User.findOne({_id:req.params.id}).then(function(user){
-            console.log('user',user)
-            return res.json(user)
+// uploading images
+const multer = require('multer')
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+
+const upload = multer({ storage: storage })
+
+router.put('/:id', upload.single('fileImage'), (req, res) => {
+    const profile_image = req.file.path
+
+    const userUpdates = {
+        ...req.body
+    }
+
+    console.log('body:',req.body)
+    console.log('photo:',profile_image)
+    const {first_name, last_name, user_bio} = req.body
+    
+    User
+        .findByIdAndUpdate({ _id: req.params.id }, {first_name,last_name,user_bio, profile_image})
+        .then(() => {
+            User
+                .findOne({ _id: req.params.id })
+                .then((user) => {
+                    console.log('user', user, profile_image)
+                    //return res.json({...user, profile_image: req.file.path})
+                    return res.json(user)
+                })
+                .catch(err => console.log(err))
         })
-    })
-    /* User
+    /* Users
         .findById(req.params.id, (error, user) => {
             if (error) res.status(400).json({ msg: `error: ${error}` })
 

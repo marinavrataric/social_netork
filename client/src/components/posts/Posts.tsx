@@ -38,10 +38,10 @@ function Posts() {
         Axios
             .get('/api/posts', config)
             .then(res => {
-                //console.log(res.data[0])
+                console.log(res.data)
                 //setAllPosts(res.data)
                 //fun(res.data)
-                setPosts(res.data)
+                //setPosts(res.data)
             })
             .catch(err => console.log(err))
     }, [])

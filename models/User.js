@@ -24,7 +24,8 @@ const UserSchema = new Schema({
         default: Date.now
     },
     profile_image: {
-        type: String
+        type: String,
+        default: ''
     },
     user_bio: {
         type: String,

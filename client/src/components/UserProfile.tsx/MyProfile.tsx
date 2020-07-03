@@ -11,7 +11,8 @@ function MyProfile() {
     const [userInfo, setUserInfo] = useState({
         firstName: '',
         lastName: '',
-        userBio: 'Write something about yourself.'
+        userBio: 'Write something about yourself.',
+        userPhoto: ''
     })
     const [isEditOpen, setIsEditOpen] = useState(false)
 
@@ -25,26 +26,34 @@ function MyProfile() {
         setIsEditOpen(true)
     }
 
-    const updateUser = () => {
+    const updateUser = (e: any) => {
+        e.preventDefault()
+
         setIsEditOpen(false)
 
-        const updatedUser = {
-            first_name: firstNameUpdated,
-            last_name: lastNameUpdated,
-            user_bio: userBioUpdated
-        }
+        const formData = new FormData()
 
+        formData.append('fileImage', file)
+        formData.append('first_name', firstNameUpdated)
+        formData.append('last_name', lastNameUpdated)
+        formData.append('user_bio', userBioUpdated)
+
+        const config: any = { header: { "Content-Type": "multipart/form-data" } }
+
+        console.log('filee', file)
         Axios
-            .put(`/api/users/${userID}`, updatedUser)
+            .put(`/api/users/${userID}`, formData, config)
             .then(res => {
-                //console.log('valja response', res.data)
+                //console.log('profile_imageee', res.data.profile_image)
+                //console.log('fali profile_image', res.data.profile_image)
+                console.log('responseee', res.data)
                 const user = res.data
                  setUserInfo({
                     firstName: user.first_name,
                     lastName: user.last_name,
-                    userBio: user.user_bio
+                    userBio: user.user_bio,
+                    userPhoto: user.profile_image
                 }) 
-                //console.log('nije update-ano', userInfo)
             })
             .catch(err => console.log(err))
     }
@@ -64,12 +73,40 @@ function MyProfile() {
                 setUserInfo({
                     firstName: user.first_name,
                     lastName: user.last_name,
-                    userBio: user.user_bio
+                    userBio: user.user_bio,
+                    userPhoto: user.profile_image
                 })
             })
             .catch(err => console.log(err))
     }, [])
 
+
+
+    // upload image
+    const [file, setFile] = useState('')
+    const [uploaded, setUploaded] = useState('')
+
+    const handleImageUpload = (e: any) => {
+        e.preventDefault();
+        setFile(e.target.files[0])
+    };
+
+    const onClickHandler = (e: any) => {
+        const formData = new FormData()
+        formData.append('fileImage', file)
+        //console.log('file',file)
+
+        Axios.post("/api/image", formData, {})
+            .then(res => {
+                //console.log(`UPLOADED: http://localhost:5000/${res.data.fileImage}`)
+                setUploaded(`http://localhost:5000/${res.data.fileImage}`)
+            })
+            .catch(err => console.log(err))
+    }
+
+//console.log('image1',uploaded)
+//console.log('photo',userInfo.userPhoto)
+    
     return (
         <div className="profile-container">
             <button className="btn-edit" onClick={editUser}>
@@ -77,7 +114,7 @@ function MyProfile() {
             </button>
             <div className="user-info">
                 <div className="img-circular">
-                    <img className="user-profile-img2" src={avatar}></img>
+                    <img className="user-profile-img2" src={userInfo.userPhoto}></img>
                 </div>
                 <p className="user-name">{userInfo.firstName} {userInfo.lastName}</p>
                 <p className="about-user">{userInfo.userBio}</p>
@@ -91,8 +128,10 @@ function MyProfile() {
                     <ModalBody>
                         <FormGroup>
                             <Label>Profile Image</Label>
-                            <Input type="file"></Input>
+                            <Input type="file" name="fileImage" onChange={handleImageUpload}></Input>
                         </FormGroup>
+                        <Button onClick={onClickHandler}>Upload</Button>
+                        <img src={uploaded} style={{width: "100px"}}></img>
                         <FormGroup>
                             <Label>First Name</Label>
                             <Input type="text" onChange={(e: any) => setFirstNameUpdated(e.target.value)}></Input>
