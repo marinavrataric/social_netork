@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import { userInfo } from "os";
 
 export const AppContext = createContext({
     token: '',
@@ -6,7 +7,8 @@ export const AppContext = createContext({
     state: {
         user_data: {
             first_name: '',
-            last_name: ''
+            last_name: '',
+            _id: ''
         },
         isAuthenticated: false,
         isLoading: true
@@ -15,5 +17,10 @@ export const AppContext = createContext({
     allUsers: [],
     setAllUsers: (allUsers: []) => {},
     logoutModal: false,
-    setLogoutModal: (logoutModal: boolean) => {}
+    setLogoutModal: (logoutModal: boolean) => {},
+    userID: '',
+    setUserID: (userID: string) => {},
+    allPosts: [],
+    setAllPosts: (allPosts: []) => {},
+    setPosts: (posts: []) => {}
 })

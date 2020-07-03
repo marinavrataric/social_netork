@@ -18,7 +18,7 @@ function Routes() {
             <Route path="/findPeople" component={() => state.isAuthenticated ? <FindPeople /> : <Home />} />
             <Route path="/posts" component={() => state.isAuthenticated ? <Posts /> : <Home />} />
             <Route path="/myProfile" component={() => state.isAuthenticated ? <MyProfile /> : <Home />} />
-            <Route path="/userProfile" component={() => state.isAuthenticated ? <UserProfile /> : <Home />} />
+            <Route path="/userProfile/:id" component={() => state.isAuthenticated ? <UserProfile /> : <Home />} />
             <Route path="/logout" component={Logout} />
         </Switch>
     )

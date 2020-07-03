@@ -20,6 +20,8 @@ mongoose
 // Routes
 app.use('/api/users', require('./api/users'))
 app.use('/api/auth', require('./api/auth'))
+app.use('/api/posts', require('./api/posts'))
+app.use('/api/image', require('./api/image'))
 
 const PORT = 5000
 app.listen(PORT, () => console.log(`Server started at port ${PORT}`))

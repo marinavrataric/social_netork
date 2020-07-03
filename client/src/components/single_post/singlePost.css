@@ -1,0 +1,46 @@
+.single-post-container {
+    width: 90%;
+    display: inline-block;
+    background-color: whitesmoke;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    text-align: left;
+    margin: 10px;
+}
+.btn {
+    border: none;
+    margin: 0;
+}
+.btn:focus{
+    outline: none;
+}
+.fa-remove {
+    color: red;
+}
+.fa-thumbs-up, .fa-comment{
+    font-size: 22px;
+}
+.right-align{
+    float: right;
+}
+.left-align{
+    float: left;
+}
+.user-name-post{
+    margin: 7px;
+    padding-bottom: 7px;
+}
+.user-post{
+    margin: 7px;
+    font-size: 15px;
+}
+.number-of-likes{
+    font-family: Arial, Helvetica, sans-serif;
+    display: inline-block;
+    margin: 0;
+    margin-right: 6px;
+}
+.buttons{
+    display: inline-block;
+}

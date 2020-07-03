@@ -25,6 +25,10 @@ const UserSchema = new Schema({
     },
     profile_image: {
         type: String
+    },
+    user_bio: {
+        type: String,
+        required: false
     }
 })
 

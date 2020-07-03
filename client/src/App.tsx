@@ -13,6 +13,7 @@ function App() {
 
     const [token, setToken] = useState('')
     const [allUsers, setAllUsers] = useState([])
+    const [userID, setUserID] = useState('')
 
     const initState = {
         isLoading: true,
@@ -53,7 +54,7 @@ function App() {
     }
 
     const [state, dispatch] = useReducer(reducer, initState)
-    console.log(state)
+    //console.log(state)
 
     // Save token in local storage and load all users
     const storedToken = localStorage.getItem('token')
@@ -65,6 +66,7 @@ function App() {
         axios
             .get('/api/auth/users', config)
             .then(res => {
+                //console.log('RESPONSE:',res.data)
                 setAllUsers(res.data)
                 dispatch({ type: 'USERS_LOADED', payload: res.data })
             })
@@ -77,12 +79,21 @@ function App() {
     const [logoutModal, setLogoutModal] = useState(false)
     const toggle = () => setLogoutModal(!logoutModal)
 
+    const [allPosts, setAllPosts] = useState([])
+
+    const setPosts = (posts: any) => {
+        setAllPosts(posts)
+    }
+
     return (
         <AppContext.Provider value={{
             token, setToken,
             state, dispatch,
             allUsers, setAllUsers,
-            logoutModal, setLogoutModal
+            logoutModal, setLogoutModal,
+            userID, setUserID,
+            allPosts, setAllPosts,
+            setPosts
         }}>
             <div className="app">
                 <NavigationRouter />

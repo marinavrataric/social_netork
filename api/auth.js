@@ -24,7 +24,7 @@ router.post('/', (req, res) => {
         .findOne({ email })
         .then(user => {
             if (!user) res.status(400).json({ msg: `User doesn't exist.` })
-
+            console.log(user)
             // validate password
             bcrypt
                 .compare(password, user.password)
@@ -42,7 +42,9 @@ router.post('/', (req, res) => {
                                 token,
                                 user: {
                                     id: user.id,
-                                    email: user.email
+                                    email: user.email,
+                                    first_name: user.first_name,
+                                    last_name: user.last_name
                                 }
                             })
                         }

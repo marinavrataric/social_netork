@@ -3,9 +3,34 @@ const router = express.Router()
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const config = require ('config')
+const config = require('config')
 
 const User = require('../models/User')
+
+router.put('/:id', (req, res) => {
+    User.findByIdAndUpdate({_id:req.params.id}, req.body).then(function(){
+        User.findOne({_id:req.params.id}).then(function(user){
+            console.log('user',user)
+            return res.json(user)
+        })
+    })
+    /* User
+        .findById(req.params.id, (error, user) => {
+            if (error) res.status(400).json({ msg: `error: ${error}` })
+
+            const { likes } = req.body
+            if (likes) user.likes = likes;
+
+            console.log(likes)
+            console.log(user)
+
+            user
+                .save(err => {
+                    if (err) res.status(400).json({ msg: `error: ${error}` })
+                    return res.json({ msg: 'success' })
+                }) 
+        })*/
+})
 
 // @route   POST /api/users
 // @desc    Create new user
@@ -13,7 +38,7 @@ const User = require('../models/User')
 
 router.post('/', (req, res) => {
 
-    console.log(req.body)
+    //console.log(req.body)
 
     const { first_name, last_name, email, password } = req.body
 
@@ -37,7 +62,7 @@ router.post('/', (req, res) => {
             bcrypt.genSalt(10, (err, salt) => {
 
                 bcrypt.hash(newUser.password, salt, (err, hash) => {
-                  
+
                     newUser.password = hash
 
                     newUser
@@ -47,7 +72,7 @@ router.post('/', (req, res) => {
                                 { id: user.id },
                                 config.get('jwtSecret'),
                                 (err, token) => {
-                                    if(err) throw err
+                                    if (err) throw err
 
                                     res.json({
                                         token,
