@@ -1,5 +1,4 @@
 import { createContext } from "react";
-import { userInfo } from "os";
 
 export const AppContext = createContext({
     token: '',
@@ -19,8 +18,5 @@ export const AppContext = createContext({
     logoutModal: false,
     setLogoutModal: (logoutModal: boolean) => {},
     userID: '',
-    setUserID: (userID: string) => {},
-    allPosts: [],
-    setAllPosts: (allPosts: []) => {},
-    setPosts: (posts: []) => {}
+    setUserID: (userID: string) => {}
 })

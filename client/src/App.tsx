@@ -77,13 +77,6 @@ function App() {
     }, [storedToken])
 
     const [logoutModal, setLogoutModal] = useState(false)
-    const toggle = () => setLogoutModal(!logoutModal)
-
-    const [allPosts, setAllPosts] = useState([])
-
-    const setPosts = (posts: any) => {
-        setAllPosts(posts)
-    }
 
     return (
         <AppContext.Provider value={{
@@ -91,9 +84,7 @@ function App() {
             state, dispatch,
             allUsers, setAllUsers,
             logoutModal, setLogoutModal,
-            userID, setUserID,
-            allPosts, setAllPosts,
-            setPosts
+            userID, setUserID
         }}>
             <div className="app">
                 <NavigationRouter />

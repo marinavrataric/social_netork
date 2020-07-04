@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import './singlePost.css'
 import Axios from 'axios'
 import { AppContext } from '../context/AppContext'
+import { PostContext } from '../posts/PostContext'
 
 function SinglePost() {
 
@@ -13,7 +14,7 @@ function SinglePost() {
 
     const storedToken = localStorage.getItem('token')
 
-    const { allPosts, setAllPosts } = useContext(AppContext)
+    const { allPosts, setAllPosts } = useContext(PostContext)
 
     const handleLike = () => {
         setLike(like + 1)

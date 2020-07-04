@@ -53,3 +53,13 @@
 .btn-edit:focus{
     outline: none;
 }
+.btn-upload-img{
+    display: block;
+}
+.inline{
+    display: block;
+    text-align: center;
+}
+.btn-update{
+    margin-right: 10px;
+}

@@ -5,6 +5,22 @@ const auth = require('../middleware/auth')
 
 const Post = require('../models/Post')
 
+// @route   PUT /api/posts/like
+// @desc    Like post
+// @access  Private
+/* router.put('/like', (req, res) => {
+    //console.log(req.body)
+    Post.findByIdAndUpdate(({ _id: req.params.id }), {
+        $push: { likes: req.user._id }
+    }, {
+        new: true
+    }).exec((err, result) => {
+        if (err) res.status(422).json({ msg: err })
+        res.json(result)
+    })
+}) */
+
+
 // @route   POST /api/posts
 // @desc    Create new post
 // @access  Private
@@ -40,7 +56,6 @@ router.get('/', auth, (req, res) => {
         .catch(err => res.json(err))
 })
 
-//ne radi
 // @route   GET /api/posts/:id
 // @desc    get user post
 // @access  Private

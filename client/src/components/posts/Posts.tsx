@@ -4,10 +4,12 @@ import Axios from 'axios'
 import SinglePost from '../single_post/SinglePost'
 import { AppContext } from '../context/AppContext'
 import './posts.css'
+import { PostContext } from './PostContext'
 
 function Posts() {
 
     const [inputText, setInputText] = useState('')
+    const { setPosts, allPosts } = useContext(PostContext)
 
     const storedToken = localStorage.getItem('token')
     const config: any = {
@@ -16,35 +18,24 @@ function Posts() {
             'Content-Type': 'application/json'
         }
     }
+    console.log('this', allPosts);
 
-    const handleClick = (e: any) => {
+    // create post
+    const submitPost = (e: any) => {
         e.preventDefault()
         const postData = {
             content: inputText
         }
-        // create post
         Axios
             .post('/api/posts', postData, config)
             .then(res => {
                 console.log('Created post: ', res.data)
             })
             .catch(err => console.log(err))
+
+        setPosts( prevState : [{content: string}] => [...prevState, {content: inputText} ])
+
     }
-
-    const { setPosts } = useContext(AppContext)
-
-    // get all posts
-    useEffect(() => {
-        Axios
-            .get('/api/posts', config)
-            .then(res => {
-                console.log(res.data)
-                //setAllPosts(res.data)
-                //fun(res.data)
-                //setPosts(res.data)
-            })
-            .catch(err => console.log(err))
-    }, [])
 
     return (
         <div className="center-post-div">
@@ -54,7 +45,7 @@ function Posts() {
                 onChange={(e: any) => setInputText(e.target.value)}
                 placeholder="What is on your mind?"
             />
-            <button onClick={handleClick} className="btn-submit-post">Submit</button>
+            <button onClick={submitPost} className="btn-submit-post">Submit</button>
             <div className="all-posts">
                 <p className="title-post">Recently posted</p>
                 <SinglePost />
