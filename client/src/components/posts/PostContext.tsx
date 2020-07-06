@@ -1,7 +1,13 @@
-import { createContext } from "react";
+import { createContext } from 'react';
 
-export const PostContext = createContext({
-    allPosts: [],
-    setAllPosts: (allPosts: []) => {},
-    setPosts: (posts: []) => {}
-})
+interface PostContextProps {
+    allPosts: Array<{ content: string; _id?: string | undefined }>;
+    setPosts: (inputText: string, id: string) => void;
+    deletePost: (postId: string) => void;
+}
+
+export const PostContext = createContext<PostContextProps>({
+    allPosts: [{ content: '', _id: '' }],
+    setPosts: (inputText: string, id: string) => {},
+    deletePost: (postId: string) => {}
+});
