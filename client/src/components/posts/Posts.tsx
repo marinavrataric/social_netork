@@ -8,7 +8,7 @@ import { PostContext } from './PostContext';
 
 function Posts() {
     const [inputText, setInputText] = useState('');
-    const { setPosts, allPosts } = useContext(PostContext);
+    const { setPosts, allPosts, updatedPosts } = useContext(PostContext);
 
     const storedToken = localStorage.getItem('token');
     const config: any = {
@@ -26,16 +26,25 @@ function Posts() {
         };
         Axios.post('/api/posts', postData, config)
             .then((res) => {
-                console.log('Created post: ', res.data);
+                //console.log('Created post: ', res.data);
                 const item: {
                     content: string;
                     _id: string;
+                    registration_date: string,
+                    likes: []
                 } = res.data;
-                setPosts(item.content, item._id);
+                setPosts(item.content, item._id, item.registration_date, item.likes);
             })
             .catch((err) => console.log(err));
     };
 
+    //console.log("post refresh")
+
+
+
+
+
+    
 
     return (
         <div className="center-post-div">
@@ -50,7 +59,7 @@ function Posts() {
             </button>
             <div className="all-posts">
                 <p className="title-post">Recently posted</p>
-                <SinglePost />
+                <SinglePost updatedPosts={updatedPosts}/>
             </div>
         </div>
     );

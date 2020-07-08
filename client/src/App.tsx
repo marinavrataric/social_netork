@@ -78,6 +78,20 @@ function App() {
 
     const [logoutModal, setLogoutModal] = useState(false)
 
+      // get user data and save ID
+      useEffect(() => {
+        const config = {
+            headers: { "x-auth-token": `${storedToken}` }
+        }
+        axios
+            .get('/api/auth/user', config)
+            .then(res => {
+                const user = res.data.user
+                setUserID(user._id)
+            })
+            .catch(err => console.log(err))
+    }, [])
+
     return (
         <AppContext.Provider value={{
             token, setToken,

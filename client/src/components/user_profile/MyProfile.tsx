@@ -4,6 +4,7 @@ import Axios from 'axios'
 import SinglePost from '../single_post/SinglePost'
 import { AppContext } from '../context/AppContext'
 import UpdateProfile from '../modals/UpdateProfile'
+import { PostContext } from '../posts/PostContext'
 
 function MyProfile() {
 
@@ -16,6 +17,15 @@ function MyProfile() {
     const [isEditOpen, setIsEditOpen] = useState(false)
 
     const { userID, setUserID } = useContext(AppContext)
+    const { allPosts, updatedPosts } = useContext(PostContext)
+
+    // get users posts
+    const allPostsCopy = updatedPosts
+    const usersPosts = allPostsCopy.filter((post: any) => {
+        if (post.userID && post.userID._id === userID) {
+            return post
+        }
+    })
 
     // open modal on click 'edit'
     const editUser = () => {
@@ -61,6 +71,10 @@ function MyProfile() {
             <div className="user-posts">
                 <p className="my-posts-title">My Posts</p>
             </div>
+            {usersPosts.length === 0
+                ? <h3>No posts yet</h3>
+                : <SinglePost updatedPosts={usersPosts}></SinglePost>
+            }
             {isEditOpen && <UpdateProfile
                 userID={userID}
                 setIsEditOpen={setIsEditOpen}

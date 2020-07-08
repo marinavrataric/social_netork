@@ -6,11 +6,17 @@ import avatar from './avatar.png';
 import './findPeople.css';
 
 function FindPeople() {
-    const { allUsers } = useContext(AppContext);
+    const { allUsers, userID } = useContext(AppContext);
 
     const [isClicked, setIsClicked] = useState(false);
 
-    const allUsersDisplayed = allUsers.map((user: { first_name: string; last_name: string; _id: string }) => {
+    const allUserWithout = allUsers.filter((user: {_id: string}) => {
+        if(user._id !== userID) {
+            return user
+        }
+    })
+
+    const allUsersDisplayed = allUserWithout.map((user: { first_name: string; last_name: string; _id: string }) => {
         return (
             <div className="user-container" key={user._id}>
                 <div className="user-card">

@@ -85,8 +85,7 @@ function UpdateProfile(props: any) {
                             className="btn-upload-img"
                         >Upload file</Button>
                         <div className="inline">
-                            <img src={file} style={{ width: "100px" }}></img>
-                             
+                            <img src={uploaded} style={{ width: "100px" }}></img>
                         </div>
                         <FormGroup>
                             <Label>First Name</Label>
