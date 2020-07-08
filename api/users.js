@@ -21,19 +21,34 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-// @route   PUT /api/users/:id
-// @desc    Update user
+// @route   PUT /api/users/:id/photo
+// @desc    Update user photo
 // @access  Private
-router.put('/:id', upload.single('fileImage'), (req, res) => {
+router.put('/:id/photo', upload.single('fileImage'), (req, res) => {
     const profile_image = req.file.path
-    const { first_name, last_name, user_bio } = req.body
     User
-        .findByIdAndUpdate({ _id: req.params.id }, { first_name, last_name, user_bio, profile_image })
+        .findByIdAndUpdate({ _id: req.params.id }, { profile_image })
         .then(() => {
             User
                 .findOne({ _id: req.params.id })
                 .then((user) => {
-                    console.log('user', user)
+                    return res.json(user)
+                })
+                .catch(err => console.log(err))
+        })
+})
+
+// @route   PUT /api/users/:id
+// @desc    Update user
+// @access  Private
+router.put('/:id', (req, res) => {
+    const { first_name, last_name, user_bio } = req.body
+    User
+        .findByIdAndUpdate({ _id: req.params.id }, { first_name, last_name, user_bio})
+        .then(() => {
+            User
+                .findOne({ _id: req.params.id })
+                .then((user) => {
                     return res.json(user)
                 })
                 .catch(err => console.log(err))

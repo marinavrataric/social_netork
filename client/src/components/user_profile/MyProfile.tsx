@@ -5,6 +5,7 @@ import SinglePost from '../single_post/SinglePost'
 import { AppContext } from '../context/AppContext'
 import UpdateProfile from '../modals/UpdateProfile'
 import { PostContext } from '../posts/PostContext'
+import UpdatePhoto from '../modals/UpdatePhoto'
 
 function MyProfile() {
 
@@ -55,6 +56,8 @@ function MyProfile() {
             .catch(err => console.log(err))
     }, [])
 
+    const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false)
+
 
     return (
         <div className="profile-container">
@@ -65,6 +68,10 @@ function MyProfile() {
                 <div className="img-circular">
                     <img className="user-profile-img2" src={userInfo.userPhoto}></img>
                 </div>
+                <button
+                    className="btn-update-photo"
+                    onClick={() => setIsPhotoModalOpen(true)}
+                >Update photo</button>
                 <p className="user-name">{userInfo.firstName} {userInfo.lastName}</p>
                 <p className="about-user">{userInfo.userBio}</p>
             </div>
@@ -79,6 +86,13 @@ function MyProfile() {
                 userID={userID}
                 setIsEditOpen={setIsEditOpen}
                 isEditOpen={isEditOpen}
+                setUserInfo={setUserInfo}
+                userInfo={userInfo}
+            />}
+            {isPhotoModalOpen && <UpdatePhoto
+                userID={userID}
+                setIsPhotoModalOpen={setIsPhotoModalOpen}
+                isPhotoModalOpen={isPhotoModalOpen}
                 setUserInfo={setUserInfo}
                 userInfo={userInfo}
             />}

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, FormGroup, Label, Input } from 'reactstrap'
 import Axios from 'axios'
 import '../user_profile/myprofile.css'
+import { userInfo } from 'os'
 
 function UpdateProfile(props: any) {
 
@@ -43,23 +44,40 @@ function UpdateProfile(props: any) {
 
         props.setIsEditOpen(false)
 
-        const formData = new FormData()
+        const body = {
+            first_name: firstNameUpdated,
+            last_name: lastNameUpdated,
+            user_bio: userBioUpdated
+        }
 
-        formData.append('fileImage', file)
-        formData.append('first_name', firstNameUpdated)
-        formData.append('last_name', lastNameUpdated)
-        formData.append('user_bio', userBioUpdated)
-
-        const config: any = { header: { "Content-Type": "multipart/form-data" } }
+        const config: any = { header: { "Content-Type": "application/json" } }
 
         Axios
-            .put(`/api/users/${props.userID}`, formData, config)
+            .put(`/api/users/${props.userID}`, body, config)
             .then(res => {
                 const user = res.data
                 props.setUserInfo({
+                    ...props.userInfo,
                     firstName: user.first_name,
                     lastName: user.last_name,
-                    userBio: user.user_bio,
+                    userBio: user.user_bio
+                })
+            })
+            .catch(err => console.log(err))
+    }
+
+    // update photo
+    const updatePhoto = () => {
+        const formData = new FormData()
+        formData.append('fileImage', file)
+
+        const config: any = { header: { "Content-Type": "multipart/form-data" } }
+        Axios
+            .put(`/api/users/${props.userID}/photo`, formData, config)
+            .then(res => {
+                const user = res.data
+                props.setUserInfo({
+                    ...userInfo,
                     userPhoto: user.profile_image
                 })
             })
@@ -72,21 +90,6 @@ function UpdateProfile(props: any) {
                 <Modal isOpen={props.isEditOpen} toggle={() => props.setIsEditOpen(!props.isEditOpen)} backdrop="static">
                     <ModalHeader>Update your profile</ModalHeader>
                     <ModalBody>
-                        <FormGroup>
-                            <Label>Profile Image</Label>
-                            <Input
-                                type="file"
-                                name="fileImage"
-                                onChange={handleImageUpload}
-                            ></Input>
-                        </FormGroup>
-                        <Button
-                            onClick={onClickHandler}
-                            className="btn-upload-img"
-                        >Upload file</Button>
-                        <div className="inline">
-                            <img src={uploaded} style={{ width: "100px" }}></img>
-                        </div>
                         <FormGroup>
                             <Label>First Name</Label>
                             <Input
