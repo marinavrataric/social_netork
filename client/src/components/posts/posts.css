@@ -13,28 +13,21 @@
     text-align: center;
     margin-top: 25px;
 }
-.btn-submit-post{
-    padding: 9px 12px;
-    width: 18%;
-    margin: 0;
-    border: none;
-    background-color: rgb(100, 241, 34);
-    border-radius: 7px;
-    margin-left: 10px;
-    font-size: 17px;
-}
-.btn-submit-post:hover{
-    background-color: rgb(94, 214, 38);
-
-}
-.btn-submit-post:focus{
-    outline: none;
-}
 .all-posts{
-    background-color: rgba(34, 57, 77, 0.829);
+    background-color: rgb(221, 221, 221);
+    padding: 10px 0;
 }
 .title-post{
-    color: white;
+    color: black;
     font-size: 25px;
     padding: 10px;
+}
+.input-post-text{
+    border-radius: 20px;
+    padding: 20px;
+    padding-left: 20px;
+    width: 100%;
+}
+.write-post-title{
+    color: white;
 }

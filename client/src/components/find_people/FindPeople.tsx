@@ -16,13 +16,13 @@ function FindPeople() {
         }
     })
 
-    const allUsersDisplayed = allUserWithout.map((user: { first_name: string; last_name: string; _id: string }) => {
+    const allUsersDisplayed = allUserWithout.map((user: { first_name: string; last_name: string; _id: string, profile_image: string }) => {
         return (
             <div className="user-container" key={user._id}>
                 <div className="user-card">
                     <div className="left">
                         <div className="circular">
-                            <img src={avatar}></img>
+                            <img src={user.profile_image === '' ? avatar : user.profile_image}></img>
                         </div>
                     </div>
                     <div className="right">

@@ -40,26 +40,19 @@ function Posts() {
 
     //console.log("post refresh")
 
-
-
-
-
-    
-
     return (
         <div className="center-post-div">
-            <input
-                type="text"
-                className="input-post-text"
-                onChange={(e: any) => setInputText(e.target.value)}
-                placeholder="What is on your mind?"
-            />
-            <button onClick={submitPost} className="btn-submit-post">
-                Submit
-            </button>
+            <h3 className="write-post-title">Write post</h3>
+            <form onSubmit={submitPost}>
+                <Input
+                    type="text"
+                    className="input-post-text"
+                    onChange={(e: any) => setInputText(e.target.value)}
+                    placeholder="What is on your mind?"
+                />
+            </form>
             <div className="all-posts">
-                <p className="title-post">Recently posted</p>
-                <SinglePost updatedPosts={updatedPosts}/>
+                <SinglePost updatedPosts={updatedPosts} />
             </div>
         </div>
     );

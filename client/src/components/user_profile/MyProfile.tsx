@@ -65,13 +65,14 @@ function MyProfile() {
                 <i className="fa fa-edit"></i>
             </button>
             <div className="user-info">
-                <div className="img-circular">
-                    <img className="user-profile-img2" src={userInfo.userPhoto}></img>
+                <div className="user-info-img">
+                    <div className="img-circular">
+                        <img className="user-profile-img2" src={userInfo.userPhoto} onClick={() => setIsPhotoModalOpen(true)}></img>
+                    </div>
+                    <div className="middle">
+                        <p className="update-photo">Update photo</p>
+                    </div>
                 </div>
-                <button
-                    className="btn-update-photo"
-                    onClick={() => setIsPhotoModalOpen(true)}
-                >Update photo</button>
                 <p className="user-name">{userInfo.firstName} {userInfo.lastName}</p>
                 <p className="about-user">{userInfo.userBio}</p>
             </div>
