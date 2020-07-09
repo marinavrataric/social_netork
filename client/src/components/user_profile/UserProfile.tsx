@@ -10,7 +10,8 @@ interface User {
     first_name: string,
     last_name: string,
     user_bio: string,
-    _id: string
+    _id: string,
+    profile_image: string
 }
 
 function UserProfile() {
@@ -20,15 +21,21 @@ function UserProfile() {
         firstName: location.state.first_name,
         lastName: location.state.last_name,
         userBio: location.state.user_bio,
-        _id: location.state._id
+        _id: location.state._id,
+        profile_image: location.state.profile_image
     }
 
     const { allPosts, updatedPosts } = useContext(PostContext)
+
+    console.log('nasljedjeno', userProfile)
+
 
     // get users posts
     const allPostsCopy = updatedPosts
     const usersPosts = allPostsCopy.filter((post: any) => {
         if (post.userID && post.userID._id === userProfile._id) {
+            console.log('aaa', post)
+
             return post
         }
     })
@@ -37,7 +44,7 @@ function UserProfile() {
         <div className="profile-container">
             <div className="user-info">
                 <div className="img-circular">
-                    <img className="user-profile-img2" src={avatar}></img>
+                    <img className="user-profile-img2" src={userProfile.profile_image ? `http://localhost:5000/${userProfile.profile_image}` : avatar}></img>
                 </div>
                 <p className="user-name">{userProfile.firstName} {userProfile.lastName}</p>
                 <p className="about-user">{userProfile.userBio}</p>

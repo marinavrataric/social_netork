@@ -17,6 +17,7 @@ function FindPeople() {
     })
 
     const allUsersDisplayed = allUserWithout.map((user: { first_name: string; last_name: string; _id: string, profile_image: string }) => {
+        console.log('slika', user.profile_image)
         return (
             <div className="user-container" key={user._id}>
                 <div className="user-card">

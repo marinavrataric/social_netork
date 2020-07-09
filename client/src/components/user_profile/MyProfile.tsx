@@ -6,6 +6,7 @@ import { AppContext } from '../context/AppContext'
 import UpdateProfile from '../modals/UpdateProfile'
 import { PostContext } from '../posts/PostContext'
 import UpdatePhoto from '../modals/UpdatePhoto'
+import avatar from '../find_people/avatar.png'
 
 function MyProfile() {
 
@@ -67,7 +68,7 @@ function MyProfile() {
             <div className="user-info">
                 <div className="user-info-img">
                     <div className="img-circular">
-                        <img className="user-profile-img2" src={userInfo.userPhoto} onClick={() => setIsPhotoModalOpen(true)}></img>
+                        <img className="user-profile-img2" src={userInfo.userPhoto ? userInfo.userPhoto : avatar} onClick={() => setIsPhotoModalOpen(true)}></img>
                     </div>
                     <div className="middle">
                         <p className="update-photo">Update photo</p>

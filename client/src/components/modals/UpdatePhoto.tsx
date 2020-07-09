@@ -38,9 +38,10 @@ function UpdatePhoto(props: any) {
             .put(`/api/users/${props.userID}/photo`, formData, config)
             .then(res => {
                 const user = res.data
+                console.log(res.data)
                 props.setUserInfo({
                     ...props.userInfo,
-                    userPhoto: user.profile_image
+                    userPhoto: `http://localhost:5000/${user.profile_image}`
                 })
                 props.setIsPhotoModalOpen(false)
             })

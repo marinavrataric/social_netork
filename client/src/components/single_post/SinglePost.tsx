@@ -3,8 +3,10 @@ import './singlePost.css';
 import Axios from 'axios';
 import { PostContext } from '../posts/PostContext';
 import { AppContext } from '../context/AppContext';
-import { Input } from 'reactstrap';
+import { Input, Button } from 'reactstrap';
 import moment from 'moment';
+import UserProfile from '../user_profile/UserProfile';
+import { Link } from 'react-router-dom';
 
 interface Post {
     _id: string,
@@ -172,7 +174,7 @@ function SinglePost(props: any) {
                 return (
                     <div className="comment-container">
                         <div className="img-comment-circular-mini">
-                            <img src={item.userID.profile_image} className="user-photo-mini"></img>
+                            <img src={`http://localhost:5000/${item.userID.profile_image}`} className="user-photo-mini"></img>
                         </div>
                         <div className="comment-text-container">
                             <p className="text-bold">{item.userID.first_name} {item.userID.last_name}</p>
@@ -184,6 +186,8 @@ function SinglePost(props: any) {
         }
 
     }
+
+    const [viewProfile, setViewProfile] = useState(false)
 
     return (
         <div className="all-posts">
@@ -198,22 +202,30 @@ function SinglePost(props: any) {
                     post && (
                         <div className="single-post-container" key={post._id}>
                             <div className="right-align">
-                                <button
+                                {post.userID._id === userID && <button
                                     className="btn btn-delete"
                                     onClick={() => {
                                         post._id && handleDeletePost(post._id);
                                     }}
-                                >
-                                    <i className="fa fa-remove" style={{color: "red"}}></i>
-                                </button>
+                                ><i className="fa fa-remove" style={{ color: "red" }}></i>
+                                </button>}
                             </div>
 
                             <div className="left-align">
 
                                 <div className="user-name-photo">
                                     <div className="img-circular-mini">
-                                        <img className="user-photo-mini" src={post.userID.profile_image}></img>
+                                        <Link
+                                            to={{
+                                                pathname: `/userProfile/${post.userID._id}`,
+                                                state: post.userID,
+                                            }}
+                                            style={{ textDecoration: 'none' }}
+                                        >
+                                            <img className="user-photo-mini" src={`http://localhost:5000/${post.userID.profile_image}`}></img>
+                                        </Link>
                                     </div>
+
                                     <div className="right-user-name-post">
                                         {post.userID && <p className="user-name-post">
                                             {post.userID.first_name} {post.userID.last_name}
@@ -235,11 +247,11 @@ function SinglePost(props: any) {
                                     {post.likes && (post.likes.includes(userID))
                                         ?
                                         <button className="btn btn-like" onClick={() => unlikePost(post._id)}>
-                                            <i className="fa fa-thumbs-down" aria-hidden="true"></i>
+                                            <i className="fa fa-thumbs-up" aria-hidden="true"></i>
                                         </button>
                                         :
                                         <button className="btn btn-like" onClick={() => handleLikePost(post._id, userID)} >
-                                            <i className="fa fa-thumbs-up" aria-hidden="true"></i>
+                                            <i className="fa fa-thumbs-up" style={{ color: "gray" }} aria-hidden="true"></i>
                                         </button>
                                     }
                                     <button onClick={() => setIsShown(!isShown)} className="btn-comment">
