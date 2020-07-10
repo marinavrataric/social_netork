@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import './home.css'
-import Register from '../modals/Register'
-import Login from '../modals/Login'
+import Register from '../../modals/Register'
+import Login from '../../modals/Login'
 
 function Home() {
 

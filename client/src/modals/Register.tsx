@@ -1,50 +1,67 @@
 import React, { useState, useContext } from 'react'
-import { Modal, ModalHeader, ModalBody, Label, ModalFooter, Button, Input, FormGroup, Alert } from 'reactstrap'
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Label, Input, FormGroup, Alert } from 'reactstrap'
 import axios from 'axios'
 import { AppContext } from '../context/AppContext'
 
-function Login(props: any) {
+function Register(props: any) {
 
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [errorMsg, setErrorMsg] = useState('')
 
-    const { setToken, dispatch } = useContext(AppContext)
+    const { dispatch, setToken } = useContext(AppContext)
 
-    const loginUser = (e: any) => {
+    // register user
+    const validateSignUp = (e: any) => {
         e.preventDefault()
-        
+
         const config: any = { header: { 'Content-Type': 'application/json' } }
         const user = {
+            first_name: firstName,
+            last_name: lastName,
             email,
             password
         }
+
         axios
-            .post('api/auth', user, config)
+            .post('/api/users', user, config)
             .then(res => {
                 setToken(res.data.token)
-                dispatch({ type: 'LOGIN_SUCCESS', payload: res.data })
+                dispatch({ type: 'REGISTER_SUCCESS', payload: res.data })
                 props.toggle(false)
             })
             .catch(err => {
                 setErrorMsg(err.response.data.msg)
-                console.log('ovo', err.response.data.msg)
-                dispatch({ type: 'LOGIN_FAILED' })
+                dispatch({ type: "REGISTER_FAILED" })
             })
     }
 
-    const closeModal = () => {
+    const closeRegisterModal = () => {
         props.toggle(false)
     }
-
-    console.log('error:', errorMsg)
 
     return (
         <Modal isOpen={props.modal} toggle={props.toggle} backdrop="static">
             {errorMsg && <Alert color="warning">{errorMsg}</Alert>}
 
-            <ModalHeader>Sign In</ModalHeader>
+            <ModalHeader>Sign Up</ModalHeader>
             <ModalBody>
+                <FormGroup>
+                    <Label>First Name</Label>
+                    <Input
+                        type="text"
+                        onChange={(e: any) => setFirstName(e.target.value)}
+                    />
+                </FormGroup>
+                <FormGroup>
+                    <Label>Last Name</Label>
+                    <Input
+                        type="text"
+                        onChange={(e: any) => setLastName(e.target.value)}
+                    />
+                </FormGroup>
                 <FormGroup>
                     <Label>Email</Label>
                     <Input
@@ -63,16 +80,16 @@ function Login(props: any) {
             <ModalFooter>
                 <Button
                     color="success"
-                    onClick={loginUser}
-                    disabled={!email || !password}
-                >Sign In</Button>
+                    onClick={validateSignUp}
+                    disabled={!firstName || !lastName || !email || !password}
+                >Sign Up</Button>
                 <Button
                     color="danger"
-                    onClick={closeModal}
+                    onClick={closeRegisterModal}
                 >Cancel</Button>
             </ModalFooter>
         </Modal>
     )
 }
 
-export default Login
+export default Register

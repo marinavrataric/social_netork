@@ -23,7 +23,7 @@ router.delete("/comment/:postId/:commentId", auth, async function (req, res) {
             return res.status(400).send("Post not found");
         }
 
-        console.log(post.comments)
+        //console.log(post.comments)
         await User.findByIdAndDelete(req.params.commentId);
 
         res.send("Success");
@@ -42,8 +42,8 @@ router.put('/comment', auth, (req, res) => {
         text: req.body.text,
         userID: req.user.id
     }
-    console.log('body', req.body)
-    console.log('user', req.user.id)
+    //console.log('body', req.body)
+    //console.log('user', req.user.id)
 
     Post.findByIdAndUpdate((req.body.postId), {
         $push: { comments: comment }
@@ -54,7 +54,7 @@ router.put('/comment', auth, (req, res) => {
         .exec((err, result) => {
             if (err) res.status(422).json({ msg: err })
             
-            console.log('result', result.comments.userID)
+            //console.log('result', result.comments.userID)
             res.json(result)
         })
 })
@@ -77,8 +77,8 @@ router.get('/comment', auth, (req, res) => {
 // @access  Private
 
 router.put('/like', auth, (req, res) => {
-    console.log('body', req.body)
-    console.log('user', req.user.id)
+    //console.log('body', req.body)
+    //console.log('user', req.user.id)
 
     Post.findByIdAndUpdate((req.body.postId), {
         $push: { likes: req.user.id }
@@ -95,8 +95,8 @@ router.put('/like', auth, (req, res) => {
 // @access  Private
 
 router.put('/unlike', auth, (req, res) => {
-    console.log('body', req.body)
-    console.log('user', req.user.id)
+    //console.log('body', req.body)
+    //console.log('user', req.user.id)
 
     Post.findByIdAndUpdate((req.body.postId), {
         $pull: { likes: req.user.id }
@@ -126,7 +126,7 @@ router.post('/', auth, (req, res) => {
         .save()
         .then(post => {
             res.json(post)
-            console.log(post)
+            //console.log(post)
         })
         .catch(err => console.log(err))
 })

@@ -5,6 +5,7 @@ interface PostContextProps {
     setPosts: (inputText: string, id: string, registration_date: string, likes: []) => void;
     deletePost: (postId: string) => void;
     likePost: (postId: string, likes: []) => void,
+    unLikePost: (postId: string, likes: []) => void,
     updatedPosts: any
 }
 
@@ -13,5 +14,6 @@ export const PostContext = createContext<PostContextProps>({
     setPosts: (inputText: string, id: string, registration_date: string, likes: []) => {},
     deletePost: (postId: string) => {},
     likePost: (postId: string, likes: []) => {},
+    unLikePost: (postId: string, likes: []) => {},
     updatedPosts: []
 });

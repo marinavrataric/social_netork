@@ -1,15 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react'
-import './myprofile.css'
+import './profile.css'
 import Axios from 'axios'
-import SinglePost from '../single_post/SinglePost'
-import { AppContext } from '../context/AppContext'
-import UpdateProfile from '../modals/UpdateProfile'
-import { PostContext } from '../posts/PostContext'
-import UpdatePhoto from '../modals/UpdatePhoto'
-import avatar from '../find_people/avatar.png'
+import SinglePost from '../../components/single_post/SinglePost'
+import { AppContext } from '../../context/AppContext'
+import UpdateProfile from '../../modals/UpdateProfile'
+import { PostContext } from '../../context/PostContext'
+import UpdatePhoto from '../../modals/UpdatePhoto'
+import avatar from '../../assets/avatar.png'
+
+interface Post {
+    userID: {
+        _id: string
+    }
+}
 
 function MyProfile() {
-
     const [userInfo, setUserInfo] = useState({
         firstName: '',
         lastName: '',
@@ -17,26 +22,18 @@ function MyProfile() {
         userPhoto: ''
     })
     const [isEditOpen, setIsEditOpen] = useState(false)
+    const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false)
 
     const { userID, setUserID } = useContext(AppContext)
-    const { allPosts, updatedPosts } = useContext(PostContext)
+    const { updatedPosts } = useContext(PostContext)
+
+    const storedToken = localStorage.getItem('token')
 
     // get users posts
     const allPostsCopy = updatedPosts
-    const usersPosts = allPostsCopy.filter((post: any) => {
-        if (post.userID && post.userID._id === userID) {
-            return post
-        }
-    })
-
-    // open modal on click 'edit'
-    const editUser = () => {
-        setIsEditOpen(true)
-    }
+    const usersPosts = allPostsCopy.filter((post: Post) => (post.userID && post.userID._id === userID))
 
     // get user data
-    const storedToken = localStorage.getItem('token')
-
     useEffect(() => {
         const config = {
             headers: { "x-auth-token": `${storedToken}` }
@@ -44,7 +41,6 @@ function MyProfile() {
         Axios
             .get('/api/auth/user', config)
             .then(res => {
-                console.log('response', res)
                 const user = res.data.user
                 setUserID(user._id)
                 setUserInfo({
@@ -55,20 +51,22 @@ function MyProfile() {
                 })
             })
             .catch(err => console.log(err))
-    }, [])
-
-    const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false)
-
+    },[])
 
     return (
         <div className="profile-container">
-            <button className="btn-edit" onClick={editUser}>
+            <button className="btn-edit" onClick={() => setIsEditOpen(true)}>
                 <i className="fa fa-edit"></i>
             </button>
             <div className="user-info">
                 <div className="user-info-img">
                     <div className="img-circular">
-                        <img className="user-profile-img2" src={userInfo.userPhoto ? userInfo.userPhoto : avatar} onClick={() => setIsPhotoModalOpen(true)}></img>
+                        <img
+                            alt='avatar'
+                            className="user-profile-img2"
+                            src={userInfo.userPhoto ? userInfo.userPhoto : avatar}
+                            onClick={() => setIsPhotoModalOpen(true)}
+                        ></img>
                     </div>
                     <div className="middle">
                         <p className="update-photo">Update photo</p>

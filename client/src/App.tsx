@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useEffect } from 'react'
-import NavigationRouter from './components/router/NavigationRouter'
-import { AppContext } from './components/context/AppContext'
+import NavigationRouter from './app_routes/NavigationRouter'
+import { AppContext } from './context/AppContext'
 import axios from 'axios'
 
 interface State {
@@ -10,10 +10,10 @@ interface State {
 }
 
 function App() {
-
     const [token, setToken] = useState('')
     const [allUsers, setAllUsers] = useState([])
     const [userID, setUserID] = useState('')
+    const [logoutModal, setLogoutModal] = useState(false)
 
     const initState = {
         isLoading: true,
@@ -54,11 +54,10 @@ function App() {
     }
 
     const [state, dispatch] = useReducer(reducer, initState)
-    //console.log(state)
 
-    // Save token in local storage and load all users
     const storedToken = localStorage.getItem('token')
 
+    // load all users
     useEffect(() => {
         const config = {
             headers: { "x-auth-token": `${storedToken}` }
@@ -66,7 +65,6 @@ function App() {
         axios
             .get('/api/auth/users', config)
             .then(res => {
-                //console.log('RESPONSE:',res.data)
                 setAllUsers(res.data)
                 dispatch({ type: 'USERS_LOADED', payload: res.data })
             })
@@ -76,10 +74,9 @@ function App() {
             })
     }, [storedToken])
 
-    const [logoutModal, setLogoutModal] = useState(false)
 
-      // get user data and save ID
-      useEffect(() => {
+    // get user data and save ID
+    useEffect(() => {
         const config = {
             headers: { "x-auth-token": `${storedToken}` }
         }

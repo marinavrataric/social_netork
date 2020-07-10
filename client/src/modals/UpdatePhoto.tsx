@@ -1,35 +1,32 @@
 import React, { useState } from 'react'
 import Axios from 'axios';
-import { Modal, FormGroup, Label, Input, Button, ModalHeader, ModalBody, ModalFooter, Alert } from 'reactstrap';
+import { Modal, FormGroup, Input, Button, ModalHeader, ModalBody, ModalFooter, Alert } from 'reactstrap';
 
 function UpdatePhoto(props: any) {
 
-    // upload image
     const [file, setFile] = useState(props.userInfo.userPhoto)
     const [uploaded, setUploaded] = useState(props.userInfo.userPhoto)
+    const [msgError, setMsgError] = useState<null | string>(null)
 
+    // upload image
     const handleImageUpload = (e: any) => {
         e.preventDefault();
         if (e.target && e.target.files) { setFile(e.target.files[0]) }
     };
 
-    const onClickHandler = (e: any) => {
+    const uploadPhoto = () => {
         const formData = new FormData()
         formData.append('fileImage', file)
 
         Axios.post("/api/image", formData, {})
             .then(res => {
-                //console.log(`UPLOADED: http://localhost:5000/${res.data.fileImage}`)
                 setUploaded(`http://localhost:5000/${res.data.fileImage}`)
             })
             .catch(err => console.log(err))
     }
 
-
-    const [msgError, setMsgError] = useState<null | string>(null)
     // update photo
     const updatePhoto = () => {
-
         const formData = new FormData()
         formData.append('fileImage', file)
 
@@ -38,14 +35,13 @@ function UpdatePhoto(props: any) {
             .put(`/api/users/${props.userID}/photo`, formData, config)
             .then(res => {
                 const user = res.data
-                console.log(res.data)
                 props.setUserInfo({
                     ...props.userInfo,
                     userPhoto: `http://localhost:5000/${user.profile_image}`
                 })
                 props.setIsPhotoModalOpen(false)
             })
-            .catch(err => {
+            .catch(() => {
                 setMsgError(`You have to choose and upload photo.`)
             })
     }
@@ -54,6 +50,7 @@ function UpdatePhoto(props: any) {
         <div>
             <Modal isOpen={props.isPhotoModalOpen} toggle={() => props.setIsPhotoModalOpen(!props.isPhotoModalOpen)} backdrop="static">
                 {msgError && <Alert color="warning">{msgError}</Alert>}
+
                 <ModalHeader>Update Photo</ModalHeader>
                 <ModalBody>
                     <FormGroup>
@@ -64,11 +61,11 @@ function UpdatePhoto(props: any) {
                         ></Input>
                     </FormGroup>
                     <Button
-                        onClick={onClickHandler}
+                        onClick={uploadPhoto}
                         className="btn-upload-img"
                     >Upload file</Button>
                     <div className="inline">
-                        <img src={uploaded} style={{ width: "100px" }}></img>
+                        <img alt='avatar' src={uploaded} style={{ width: "100px" }}></img>
                     </div>
                 </ModalBody>
                 <ModalFooter>

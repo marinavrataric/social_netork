@@ -1,32 +1,31 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Button, Input } from 'reactstrap';
+import React, { useState, useContext } from 'react';
+import { Input } from 'reactstrap';
 import Axios from 'axios';
-import SinglePost from '../single_post/SinglePost';
-import { AppContext } from '../context/AppContext';
+import SinglePost from '../../components/single_post/SinglePost';
 import './posts.css';
-import { PostContext } from './PostContext';
+import { PostContext } from '../../context/PostContext';
 
 function Posts() {
     const [inputText, setInputText] = useState('');
-    const { setPosts, allPosts, updatedPosts } = useContext(PostContext);
+    const { setPosts, updatedPosts } = useContext(PostContext);
 
     const storedToken = localStorage.getItem('token');
     const config: any = {
         headers: {
             'x-auth-token': `${storedToken}`,
-            'Content-Type': 'application/json',
-        },
+            'Content-Type': 'application/json'
+        }
     };
 
     // create post
     const submitPost = (e: any) => {
-        e.preventDefault();
+        e.preventDefault()
+
         const postData = {
-            content: inputText,
-        };
+            content: inputText
+        }
         Axios.post('/api/posts', postData, config)
             .then((res) => {
-                //console.log('Created post: ', res.data);
                 const item: {
                     content: string;
                     _id: string;
@@ -36,9 +35,23 @@ function Posts() {
                 setPosts(item.content, item._id, item.registration_date, item.likes);
             })
             .catch((err) => console.log(err));
+            
+        setInputText('')
     };
 
-    //console.log("post refresh")
+/*     const [state, setstate] = useState()
+       // get all posts
+       useEffect(() => {
+        const config: any = {
+            headers: {
+                'x-auth-token': `${storedToken}`,
+                'Content-Type': 'application/json',
+            }
+        }
+        Axios.get('/api/posts/comment', config)
+            .then((res) => setstate(res.data))
+            .catch((err) => console.log(err));
+    }, []);  */  
 
     return (
         <div className="center-post-div">

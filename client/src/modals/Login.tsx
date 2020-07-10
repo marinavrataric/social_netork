@@ -1,44 +1,40 @@
 import React, { useState, useContext } from 'react'
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Label, Input, FormGroup, Alert } from 'reactstrap'
+import { Modal, ModalHeader, ModalBody, Label, ModalFooter, Button, Input, FormGroup, Alert } from 'reactstrap'
 import axios from 'axios'
 import { AppContext } from '../context/AppContext'
 
-function Register(props: any) {
+function Login(props: any) {
 
-    const [firstName, setFirstName] = useState<string>('')
-    const [lastName, setLastName] = useState<string>('')
-    const [email, setEmail] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
-
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
     const [errorMsg, setErrorMsg] = useState('')
 
-    const { dispatch, setToken } = useContext(AppContext)
+    const { setToken, dispatch } = useContext(AppContext)
 
-    const validateSignUp = (e: any) => {
+    // login user
+    const loginUser = (e: any) => {
         e.preventDefault()
-
+        
         const config: any = { header: { 'Content-Type': 'application/json' } }
         const user = {
-            first_name: firstName,
-            last_name: lastName,
             email,
             password
         }
-
         axios
-            .post('/api/users', user, config)
+            .post('api/auth', user, config)
             .then(res => {
                 setToken(res.data.token)
-                dispatch({ type: 'REGISTER_SUCCESS', payload: res.data })
+                dispatch({ type: 'LOGIN_SUCCESS', payload: res.data })
                 props.toggle(false)
             })
             .catch(err => {
                 setErrorMsg(err.response.data.msg)
-                dispatch({ type: "REGISTER_FAILED" })
+                console.log('ovo', err.response.data.msg)
+                dispatch({ type: 'LOGIN_FAILED' })
             })
     }
 
-    const closeRegisterModal = () => {
+    const closeModal = () => {
         props.toggle(false)
     }
 
@@ -46,22 +42,8 @@ function Register(props: any) {
         <Modal isOpen={props.modal} toggle={props.toggle} backdrop="static">
             {errorMsg && <Alert color="warning">{errorMsg}</Alert>}
 
-            <ModalHeader>Sign Up</ModalHeader>
+            <ModalHeader>Sign In</ModalHeader>
             <ModalBody>
-                <FormGroup>
-                    <Label>First Name</Label>
-                    <Input
-                        type="text"
-                        onChange={(e: any) => setFirstName(e.target.value)}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label>Last Name</Label>
-                    <Input
-                        type="text"
-                        onChange={(e: any) => setLastName(e.target.value)}
-                    />
-                </FormGroup>
                 <FormGroup>
                     <Label>Email</Label>
                     <Input
@@ -80,16 +62,16 @@ function Register(props: any) {
             <ModalFooter>
                 <Button
                     color="success"
-                    onClick={validateSignUp}
-                    disabled={!firstName || !lastName || !email || !password}
-                >Sign Up</Button>
+                    onClick={loginUser}
+                    disabled={!email || !password}
+                >Sign In</Button>
                 <Button
                     color="danger"
-                    onClick={closeRegisterModal}
+                    onClick={closeModal}
                 >Cancel</Button>
             </ModalFooter>
         </Modal>
     )
 }
 
-export default Register
+export default Login

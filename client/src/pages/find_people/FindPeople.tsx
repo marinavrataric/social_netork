@@ -1,36 +1,39 @@
 import React, { useContext, useState } from 'react';
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { AppContext } from '../context/AppContext';
-import avatar from './avatar.png';
+import { AppContext } from '../../context/AppContext';
+import avatar from '../../assets/avatar.png';
 import './findPeople.css';
 
+interface User {
+    _id: string,
+    first_name: string,
+    last_name: string,
+    profile_image: string
+}
+
 function FindPeople() {
+
     const { allUsers, userID } = useContext(AppContext);
 
-    const [isClicked, setIsClicked] = useState(false);
+    const [isOpenUserProfile, setIsOpenUserProfile] = useState(false);
 
-    const allUserWithout = allUsers.filter((user: {_id: string}) => {
-        if(user._id !== userID) {
-            return user
-        }
-    })
+    const allUserWithoutAuthUser = allUsers.filter((user: User) => (user._id !== userID))
 
-    const allUsersDisplayed = allUserWithout.map((user: { first_name: string; last_name: string; _id: string, profile_image: string }) => {
-        console.log('slika', user.profile_image)
+    const allUsersDisplayed = allUserWithoutAuthUser.map((user: User) => {
         return (
             <div className="user-container" key={user._id}>
                 <div className="user-card">
                     <div className="left">
                         <div className="circular">
-                            <img src={user.profile_image === '' ? avatar : user.profile_image}></img>
+                            <img alt='avatar' src={user.profile_image === '' ? avatar : user.profile_image}></img>
                         </div>
                     </div>
                     <div className="right">
                         <p className="user-info2">
                             {user.first_name} {user.last_name}
                         </p>
-                        <Button color="info" onClick={() => setIsClicked(true)}>
+                        <Button color="info" onClick={() => setIsOpenUserProfile(true)}>
                             <Link
                                 to={{
                                     pathname: `/userProfile/${user._id}`,
@@ -44,15 +47,15 @@ function FindPeople() {
                     </div>
                 </div>
             </div>
-        );
-    });
+        )
+    })
 
     return (
         <div>
             <h2 className="title-users">Find People</h2>
             {allUsersDisplayed}
         </div>
-    );
+    )
 }
 
 export default FindPeople;
