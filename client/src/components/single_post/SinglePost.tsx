@@ -6,8 +6,9 @@ import { PostContext } from '../../context/PostContext';
 import { AppContext } from '../../context/AppContext';
 import { Input } from 'reactstrap';
 import moment from 'moment';
-import SingleComment from './single_comment/SingleComment';
 import PostTime from './post-creation-time/PostTime';
+import FirstThreeComments from './single_comment/FirstThreeComments';
+import AllComments from './single_comment/AllComments';
 
 interface Post {
     _id: string,
@@ -33,8 +34,9 @@ interface Post {
 
 function SinglePost(props: any) {
     const [isShown, setIsShown] = useState(false)
+    const [clickedPostId, setClickedPostId] = useState()
 
-    const { deletePost, likePost, unLikePost } = useContext(PostContext);
+    const { deletePost, likePost, unLikePost, updatedPosts } = useContext(PostContext);
     const { userID } = useContext(AppContext)
 
     const storedToken = localStorage.getItem('token');
@@ -77,6 +79,12 @@ function SinglePost(props: any) {
         Axios.delete(`/api/posts/${id}`, config)
             .then(() => deletePost(id))
     };
+
+    // show comments
+    const showComments = (post:any) =>{
+        setIsShown(!isShown)
+        setClickedPostId(post._id)
+    }
 
     return (
         <div className="all-posts">
@@ -150,15 +158,17 @@ function SinglePost(props: any) {
                                             <i className="fa fa-thumbs-up" style={{ color: "gray" }} aria-hidden="true"></i>
                                         </button>
                                     }
-                                    <button onClick={() => setIsShown(!isShown)} className="btn-comment">
+                                    <button onClick={() => showComments(post)} className="btn-comment">
                                         {post.comments.length} {post.comments.length > 1 ? 'comments' : 'comment'}
                                     </button>
                                 </div>
 
                                 <hr />
 
-                                {/*show all comments*/}
-                                <div className="comments-container">{SingleComment(post, isShown)}</div>
+                                {/*show comments*/}
+                                <div className="comments-container">
+                                    {(isShown && post._id === clickedPostId) ? AllComments(post) : FirstThreeComments(post)}
+                                </div>
 
                                 {/*add new comment*/}
                                 <form onSubmit={(e: any) => {
