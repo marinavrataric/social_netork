@@ -4,12 +4,15 @@ import { Link } from 'react-router-dom';
 import { AppContext } from '../../context/AppContext';
 import avatar from '../../assets/avatar.png';
 import './findPeople.css';
+import Axios from 'axios';
 
 interface User {
     _id: string,
     first_name: string,
     last_name: string,
-    profile_image: string
+    profile_image: string,
+    followers: Array<string>,
+    following: Array<string>
 }
 
 function FindPeople() {
@@ -19,6 +22,41 @@ function FindPeople() {
     const [isOpenUserProfile, setIsOpenUserProfile] = useState(false);
 
     const allUserWithoutAuthUser = allUsers.filter((user: User) => (user._id !== userID))
+
+    // follow
+    const followUser = (id: any) => {
+        console.log('user ID:', id)
+        const storedToken = localStorage.getItem('token')
+        const body = {
+            followId: id
+        }
+        const config = {
+            headers: {
+                'x-auth-token': `${storedToken}`,
+                'Content-Type': 'application/json',
+            }
+        }
+        Axios.put('/api/users/follow', body, config)
+            .then(res => console.log(res.data))
+            .catch(err => console.log(err))
+    }
+    // unfollow
+    const unfollowUser = (id: any) => {
+        console.log('user ID:', id)
+        const storedToken = localStorage.getItem('token')
+        const body = {
+            unfollowId: id
+        }
+        const config = {
+            headers: {
+                'x-auth-token': `${storedToken}`,
+                'Content-Type': 'application/json',
+            }
+        }
+        Axios.put('/api/users/unfollow', body, config)
+            .then(res => console.log(res.data))
+            .catch(err => console.log(err))
+    }
 
     const allUsersDisplayed = allUserWithoutAuthUser.map((user: User) => {
         return (
@@ -33,6 +71,13 @@ function FindPeople() {
                         <p className="user-info2">
                             {user.first_name} {user.last_name}
                         </p>
+                        {!user.followers.includes(userID)
+                            ?
+                            <Button color="info" onClick={() => followUser(user._id)}>Follow</Button>
+                            :
+                            <Button color="info" onClick={() => unfollowUser(user._id)}>Unollow</Button>
+
+                        }
                         <Button color="info" onClick={() => setIsOpenUserProfile(true)}>
                             <Link
                                 to={{

@@ -9,29 +9,35 @@ const Post = require('../models/Post')
 // @desc    Delete comment
 // @access  Private
 
-router.delete("/comment/:postId/:commentId", auth, async function (req, res) {
+router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     try {
-        const post = await Post.findByIdAndUpdate(
-            req.params.postId,
-            {
-                $pull: { comments: req.params.commentId },
-            },
-            { new: true }
-        );
-
-        if (!post) {
-            return res.status(400).send("Post not found");
-        }
-
-        //console.log(post.comments)
-        await User.findByIdAndDelete(req.params.commentId);
-
-        res.send("Success");
+      const post = await Post.findById(req.params.id);
+  
+      // Pull out comment
+      const comment = post.comments.find(
+        comment => comment.id === req.params.comment_id
+      );
+  
+      // Make sure comment exists
+      if (!comment) {
+        return res.status(404).json({ msg: 'Comment does not exist' });
+      }
+   
+      // Get remove index
+      const removeIndex = post.comments
+        .map(comment => comment.userID.toString())
+        .indexOf(req.user.id);
+  
+      post.comments.splice(removeIndex, 1);
+  
+      await post.save();
+  
+      res.json(post.comments);
     } catch (err) {
-        console.log(err);
-        res.status(500).send("Something went wrong");
+      console.error(err.message);
+      res.status(500).send('Server Error');
     }
-});
+  });
 
 // @route   PUT /api/posts/comment
 // @desc    Create comment
@@ -53,7 +59,7 @@ router.put('/comment', auth, (req, res) => {
         .populate('comments.userID', "_id first_name last_name profile_image")
         .exec((err, result) => {
             if (err) res.status(422).json({ msg: err })
-            
+
             //console.log('result', result.comments.userID)
             res.json(result)
         })
@@ -143,6 +149,22 @@ router.get('/', auth, (req, res) => {
         .sort({ registration_date: -1 })
         .then(post => res.json(post))
         .catch(err => res.json(err))
+})
+
+// @route   GET /api/posts/subscribedPost
+// @desc    get all subscribed post
+// @access  Private
+
+router.get('/subscribedPost', auth, (req, res) => {
+    console.log('-',req.user)
+
+    Post
+        .find({userID: req.user.following})
+        .populate('userID', 'first_name last_name profile_image _id')
+        .sort({ registration_date: -1 })
+        .then(post => res.json(post))
+        .catch(err => res.json(err))
+    
 })
 
 // @route   GET /api/posts/:id

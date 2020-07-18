@@ -30,7 +30,15 @@ const UserSchema = new Schema({
     user_bio: {
         type: String,
         required: false
-    }
+    },
+    followers: [{
+        type: Schema.Types.ObjectId,
+        ref: "user"
+    }],
+    following: [{
+        type: Schema.Types.ObjectId,
+        ref: "user"
+    }]
 })
 
 module.exports = User = mongoose.model('user', UserSchema)

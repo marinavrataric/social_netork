@@ -14,6 +14,11 @@ interface Post {
     }
 }
 
+interface FollowUser {
+    first_name: string,
+    last_name: string
+}
+
 function MyProfile() {
     const [userInfo, setUserInfo] = useState({
         firstName: '',
@@ -23,6 +28,9 @@ function MyProfile() {
     })
     const [isEditOpen, setIsEditOpen] = useState(false)
     const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false)
+    const [following, setFollowing] = useState(null)
+    const [followers, setFollowers] = useState(0)
+    const [followingUsers, setFollowingUsers] = useState<Array<FollowUser>>([{ first_name: '', last_name: '' }])
 
     const { userID, setUserID } = useContext(AppContext)
     const { updatedPosts } = useContext(PostContext)
@@ -42,6 +50,9 @@ function MyProfile() {
             .get('/api/auth/user', config)
             .then(res => {
                 const user = res.data.user
+                setFollowers(res.data.user.followers.length)
+                setFollowing(res.data.user.following.length)
+                setFollowingUsers(user.following)
                 setUserID(user._id)
                 setUserInfo({
                     firstName: user.first_name,
@@ -51,7 +62,21 @@ function MyProfile() {
                 })
             })
             .catch(err => console.log(err))
-    },[])
+    }, [])
+
+    const [isFollowOpen, setIsFollowOpen] = useState(false)
+
+    const showFollowing = () => {
+setIsFollowOpen(!isFollowOpen)
+    }
+
+    const followingUserList = followingUsers.map((following: FollowUser) => {
+        return (
+            <div>
+                <h5>{following.first_name} {following.last_name}</h5>
+            </div>
+        )
+    })
 
     return (
         <div className="profile-container">
@@ -78,6 +103,11 @@ function MyProfile() {
             <div className="user-posts">
                 <p className="my-posts-title">My Posts</p>
             </div>
+            <p>{followers} {followers && followers < 2 ? 'follower' : 'followers'} </p>
+            <button onClick={showFollowing}>
+                <p>{following} following</p>
+            </button>
+            {isFollowOpen && followingUserList}
             {usersPosts.length === 0
                 ? <h3>No posts yet</h3>
                 : <SinglePost updatedPosts={usersPosts}></SinglePost>

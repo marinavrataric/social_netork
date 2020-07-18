@@ -15,6 +15,7 @@ interface Post {
     content: string,
     registration_date: string,
     comments: [{
+        id: string,
         text: string,
         userID: {
             first_name: string,
@@ -81,7 +82,7 @@ function SinglePost(props: any) {
     };
 
     // show comments
-    const showComments = (post:any) =>{
+    const showComments = (post: any) => {
         setIsShown(!isShown)
         setClickedPostId(post._id)
     }
@@ -105,7 +106,7 @@ function SinglePost(props: any) {
                                     onClick={() => {
                                         post._id && handleDeletePost(post._id);
                                     }}
-                                ><i className="fa fa-remove" style={{ color: "red" }}></i>
+                                ><i className="fa fa-remove" style={{ color: "red", fontSize: '20px'}}></i>
                                 </button>}
                             </div>
 

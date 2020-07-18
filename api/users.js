@@ -6,6 +6,46 @@ const jwt = require('jsonwebtoken')
 const config = require('config')
 
 const User = require('../models/User')
+const auth = require('../middleware/auth')
+
+// following
+router.put('/follow', auth, (req, res) => {
+    User.findByIdAndUpdate(req.body.followId, {
+            $push: { followers: req.user.id }
+        },{
+            new: true
+        }, (err, result) => {
+           if(err) res.status(422).json({msFg: err})
+           User.findByIdAndUpdate(req.user.id, {
+               $push: {following: req.body.followId}
+           }, {
+               new: true
+           })
+           .then(result => res.json(result))
+           .catch(err => res.status(422).json({msg: err}))
+        }
+    )
+})
+
+// unfollowing
+router.put('/unfollow', auth, (req, res) => {
+    User.findByIdAndUpdate(req.body.unfollowId, {
+            $pull: { followers: req.user.id }
+        },{
+            new: true
+        }, (err, result) => {
+           if(err) res.status(422).json({msg: err})
+           User.findByIdAndUpdate(req.user.id, {
+               $pull: {following: req.body.unfollowId}
+           }, {
+               new: true
+           })
+           .then(result => res.json(result))
+           .catch(err => res.status(422).json({msg: err}))
+        }
+    )
+})
+
 
 // uploading images
 const multer = require('multer')
@@ -44,7 +84,7 @@ router.put('/:id/photo', upload.single('fileImage'), (req, res) => {
 router.put('/:id', (req, res) => {
     const { first_name, last_name, user_bio } = req.body
     User
-        .findByIdAndUpdate({ _id: req.params.id }, { first_name, last_name, user_bio})
+        .findByIdAndUpdate({ _id: req.params.id }, { first_name, last_name, user_bio })
         .then(() => {
             User
                 .findOne({ _id: req.params.id })
@@ -115,5 +155,7 @@ router.post('/', (req, res) => {
         })
         .catch(err => console.log(err))
 })
+
+
 
 module.exports = router

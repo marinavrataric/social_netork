@@ -1,10 +1,12 @@
 import React from 'react'
+import Axios from 'axios';
 
 interface Post {
     _id: string,
     content: string,
     registration_date: string,
     comments: [{
+        id: string,
         text: string,
         userID: {
             first_name: string,
@@ -23,6 +25,19 @@ interface Post {
 }
 
 function FirstThreeComments(post: Post) {
+    const storedToken = localStorage.getItem('token');
+    const config = {
+        headers: {
+            'x-auth-token': `${storedToken}`,
+            'Content-Type': 'application/json',
+        }
+    }
+
+    const deleteComment = (commentId: any) => {
+        const postId = post._id
+        Axios.delete(`/api/posts/comment/${postId}/${commentId}`, config)
+    }
+
     return post.comments.slice(0, 3).map((item: any) => {
         return (
             <div className="comment-container">
@@ -32,7 +47,13 @@ function FirstThreeComments(post: Post) {
                 <div className="comment-text-container">
                     <p className="text-bold">{item.userID.first_name} {item.userID.last_name}</p>
                     <p className="comment">{item.text}</p>
+                    <div className="div-comment-delete">
+                        <button className="bt" onClick={() => deleteComment(item._id)}>
+                            <i className="fa fa-remove" style={{ fontSize: "14px", color: "red" }}></i>
+                        </button>
+                    </div>
                 </div>
+
             </div>
         )
     })

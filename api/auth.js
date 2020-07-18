@@ -33,7 +33,7 @@ router.post('/', (req, res) => {
 
                     // if password matches, send token and user
                     jwt.sign(
-                        { id: user.id },
+                        user.toJSON(),
                         config.get('jwtSecret'),
                         (err, token) => {
                             if (err) throw err
@@ -44,7 +44,12 @@ router.post('/', (req, res) => {
                                     id: user.id,
                                     email: user.email,
                                     first_name: user.first_name,
-                                    last_name: user.last_name
+                                    last_name: user.last_name,
+                                    registration_date: user.registration_date,
+                                    profile_image: user.profile_image,
+                                    user_bio: user. user_bio,
+                                    followers: user.followers,
+                                    following: user.following
                                 }
                             })
                         }
@@ -61,6 +66,8 @@ router.get('/user', auth, (req, res) => {
     User
         .findById(req.user.id)
         .select('-password')
+        .populate('followers', 'first_name last_name profile_image _id')
+        .populate('following', 'first_name last_name profile_image _id')
         .then(user => res.json({ user }))
 })
 

@@ -83,6 +83,7 @@ function App() {
         axios
             .get('/api/auth/user', config)
             .then(res => {
+               // console.log(res.data.user)
                 const user = res.data.user
                 setUserID(user._id)
             })

@@ -9,7 +9,7 @@ import UserProfile from '../pages/user_profile/UserProfile';
 import { AppContext } from '../context/AppContext';
 import { PostContext } from '../context/PostContext';
 import Axios from 'axios';
-import { ProfileContext } from '../context/ProfileContext';
+import Subscribed from '../pages/posts/Subscribed';
 
 interface allPostsProps {
     content: string;
@@ -63,15 +63,16 @@ function Routes() {
         Axios.get('/api/posts', config)
             .then(res => setAllPosts(res.data))
             .catch(err => console.log(err))
-    }, [config]);
+    }, []);
 
     // get all comments
     useEffect(() => {
         Axios.get('api/posts/comment', config)
             .then(res => setUpdatedPosts(res.data))
             .catch(err => console.log(err))
-    }, [config])
+    }, [])
 
+    //console.log('routes')
     return (
         <Switch>
             <Route path="/" exact>
@@ -107,6 +108,9 @@ function Routes() {
                     </PostContext.Provider>
                     : <Home />
                 }
+            </Route>
+            <Route path="/subscribed">
+                <Subscribed />
             </Route>
             <Route path="/logout">
                 <Logout />

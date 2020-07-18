@@ -61,6 +61,14 @@ function Links() {
                                 className="nav-link"
                             >My profile</NavLink>}
                     </NavItem>
+                    <NavItem className="nav-item">
+                        <NavLink
+                            to='/subscribed'
+                            className="nav-link"
+                            activeStyle={{ color: "rgb(35, 204, 255)" }}>
+                            Subscribed
+                        </NavLink>
+                    </NavItem>
                     {state.isAuthenticated && <NavItem className="nav-item">
                         <NavLink
                             to="/logout"

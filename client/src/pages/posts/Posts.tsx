@@ -1,9 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Input } from 'reactstrap';
 import Axios from 'axios';
 import SinglePost from '../../components/single_post/SinglePost';
 import './posts.css';
 import { PostContext } from '../../context/PostContext';
+import Subscribed from './Subscribed';
 
 function Posts() {
     const [inputText, setInputText] = useState('');
@@ -35,23 +36,37 @@ function Posts() {
                 setPosts(item.content, item._id, item.registration_date, item.likes);
             })
             .catch((err) => console.log(err));
-            
-        setInputText('')
+
+        e.target[0].value = ''
     };
 
-/*     const [state, setstate] = useState()
-       // get all posts
-       useEffect(() => {
+    /*     const [state, setstate] = useState()
+           // get all posts
+           useEffect(() => {
+            const config: any = {
+                headers: {
+                    'x-auth-token': `${storedToken}`,
+                    'Content-Type': 'application/json',
+                }
+            }
+            Axios.get('/api/posts/comment', config)
+                .then((res) => setstate(res.data))
+                .catch((err) => console.log(err));
+        }, []);  */
+
+
+    // get all posts
+    useEffect(() => {
         const config: any = {
             headers: {
                 'x-auth-token': `${storedToken}`,
                 'Content-Type': 'application/json',
             }
         }
-        Axios.get('/api/posts/comment', config)
-            .then((res) => setstate(res.data))
+        Axios.get('/api/posts/subscribedPost', config)
+            .then((res) => console.log('subscribed',res.data))
             .catch((err) => console.log(err));
-    }, []);  */  
+    }, []);
 
     return (
         <div className="center-post-div">

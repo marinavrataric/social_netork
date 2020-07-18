@@ -93,34 +93,34 @@ hr {
     margin-left: 30px;
     display: flexbox;
 }
-.btn-like{
+.btn-like {
     padding: 0;
 }
-.number-of-likes{
+.number-of-likes {
     font-size: 14px;
 }
-.btn-comment{
+.btn-comment {
     margin-left: 25px;
     border: none;
     border-bottom: 1px black solid;
     background-color: transparent;
     font-size: 14px;
 }
-.btn-comment:focus{
+.btn-comment:focus {
     outline: none;
 }
-.comment-container{
+.comment-container {
     background-color: rgba(228, 228, 228, 0.664);
     margin: 10px 0;
     margin-left: 10px;
     border-radius: 20px;
 }
-.text-comment-input{
+.text-comment-input {
     border-radius: 20px;
     margin: 10px;
     font-size: 14px;
 }
-.img-comment-circular-mini{
+.img-comment-circular-mini {
     width: 25px;
     height: 25px;
     overflow: hidden;
@@ -136,11 +136,20 @@ hr {
     display: flex;
     margin: 0;
 }
-.text-bold{
+.text-bold {
     font-weight: 700;
     float: left;
     padding: 4px;
     padding-left: 10px;
     margin: 0;
     font-size: 15px;
+}
+.bt {
+    border: none;
+    background-color: transparent;
+}
+.div-comment-delete {
+    float: right;
+    margin-top: -30px;
+    padding-right: 5px;
 }
