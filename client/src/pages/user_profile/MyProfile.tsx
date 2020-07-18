@@ -7,6 +7,9 @@ import UpdateProfile from '../../modals/UpdateProfile'
 import { PostContext } from '../../context/PostContext'
 import UpdatePhoto from '../../modals/UpdatePhoto'
 import avatar from '../../assets/avatar.png'
+import Following from '../../components/following/Following'
+import Followers from '../../components/followers/Followers'
+import '../../components/followers/follow.css'
 
 interface Post {
     userID: {
@@ -16,7 +19,8 @@ interface Post {
 
 interface FollowUser {
     first_name: string,
-    last_name: string
+    last_name: string,
+    profile_image: string
 }
 
 function MyProfile() {
@@ -30,7 +34,10 @@ function MyProfile() {
     const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false)
     const [following, setFollowing] = useState(null)
     const [followers, setFollowers] = useState(0)
-    const [followingUsers, setFollowingUsers] = useState<Array<FollowUser>>([{ first_name: '', last_name: '' }])
+    const [followingUsers, setFollowingUsers] = useState<Array<FollowUser>>([{ first_name: '', last_name: '', profile_image: '' }])
+    const [followersUsers, setFollowersUsers] = useState<Array<FollowUser>>([{ first_name: '', last_name: '', profile_image: '' }])
+    const [isFollowingOpen, setIsFollowingOpen] = useState(false)
+    const [isFollowersOpen, setIsFollowersOpen] = useState(false)
 
     const { userID, setUserID } = useContext(AppContext)
     const { updatedPosts } = useContext(PostContext)
@@ -53,6 +60,7 @@ function MyProfile() {
                 setFollowers(res.data.user.followers.length)
                 setFollowing(res.data.user.following.length)
                 setFollowingUsers(user.following)
+                setFollowersUsers(user.followers)
                 setUserID(user._id)
                 setUserInfo({
                     firstName: user.first_name,
@@ -63,20 +71,6 @@ function MyProfile() {
             })
             .catch(err => console.log(err))
     }, [])
-
-    const [isFollowOpen, setIsFollowOpen] = useState(false)
-
-    const showFollowing = () => {
-setIsFollowOpen(!isFollowOpen)
-    }
-
-    const followingUserList = followingUsers.map((following: FollowUser) => {
-        return (
-            <div>
-                <h5>{following.first_name} {following.last_name}</h5>
-            </div>
-        )
-    })
 
     return (
         <div className="profile-container">
@@ -103,11 +97,12 @@ setIsFollowOpen(!isFollowOpen)
             <div className="user-posts">
                 <p className="my-posts-title">My Posts</p>
             </div>
-            <p>{followers} {followers && followers < 2 ? 'follower' : 'followers'} </p>
-            <button onClick={showFollowing}>
-                <p>{following} following</p>
+            <button className="btn-follow" onClick={() => setIsFollowersOpen(!isFollowersOpen)}>
+                <p className="follow-title">{followers} {followers && followers < 2 ? 'follower' : 'followers'} </p>
             </button>
-            {isFollowOpen && followingUserList}
+            <button className="btn-follow" onClick={() => setIsFollowingOpen(!isFollowingOpen)}>
+                <p className="follow-title">{following} following</p>
+            </button>
             {usersPosts.length === 0
                 ? <h3>No posts yet</h3>
                 : <SinglePost updatedPosts={usersPosts}></SinglePost>
@@ -126,6 +121,20 @@ setIsFollowOpen(!isFollowOpen)
                 setUserInfo={setUserInfo}
                 userInfo={userInfo}
             />}
+            {isFollowingOpen &&
+                <Following
+                    followingUsers={followingUsers}
+                    isFollowingOpen={isFollowingOpen}
+                    setIsFollowingOpen={setIsFollowingOpen}
+                />
+            }
+            {isFollowersOpen &&
+                <Followers
+                    followersUsers={followersUsers}
+                    isFollowersOpen={isFollowersOpen}
+                    setIsFollowersOpen={setIsFollowersOpen}
+                />
+            }
         </div>
     )
 }
