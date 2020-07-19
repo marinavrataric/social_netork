@@ -11,33 +11,37 @@ const Post = require('../models/Post')
 
 router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     try {
-      const post = await Post.findById(req.params.id);
-  
-      // Pull out comment
-      const comment = post.comments.find(
-        comment => comment.id === req.params.comment_id
-      );
-  
-      // Make sure comment exists
-      if (!comment) {
-        return res.status(404).json({ msg: 'Comment does not exist' });
-      }
-   
-      // Get remove index
-      const removeIndex = post.comments
-        .map(comment => comment.userID.toString())
-        .indexOf(req.user.id);
-  
-      post.comments.splice(removeIndex, 1);
-  
-      await post.save();
-  
-      res.json(post.comments);
+        const post = await Post.findById(req.params.id);
+
+        // Pull out comment
+        const comment = post.comments.find(
+            comment => comment.id === req.params.comment_id
+        );
+
+        // Make sure comment exists
+        if (!comment) {
+            return res.status(404).json({ msg: 'Comment does not exist' });
+        }
+
+        // Get remove index
+        const removeIndex = post.comments
+            .filter(comment => (String(comment._id)) !== req.params.comment_id)
+
+
+        //console.log('remove index',removeIndex)
+
+        post.comments.splice(removeIndex, 1);
+
+        console.log(post)
+        
+        await post.save();
+
+        res.json(post.comments);
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
+        console.error(err.message);
+        res.status(500).send('Server Error');
     }
-  });
+});
 
 // @route   PUT /api/posts/comment
 // @desc    Create comment
@@ -46,11 +50,8 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
 router.put('/comment', auth, (req, res) => {
     const comment = {
         text: req.body.text,
-        userID: req.user.id
+        userID: req.user._id
     }
-    //console.log('body', req.body)
-    //console.log('user', req.user.id)
-
     Post.findByIdAndUpdate((req.body.postId), {
         $push: { comments: comment }
     }, {
@@ -59,8 +60,6 @@ router.put('/comment', auth, (req, res) => {
         .populate('comments.userID', "_id first_name last_name profile_image")
         .exec((err, result) => {
             if (err) res.status(422).json({ msg: err })
-
-            //console.log('result', result.comments.userID)
             res.json(result)
         })
 })
@@ -83,11 +82,8 @@ router.get('/comment', auth, (req, res) => {
 // @access  Private
 
 router.put('/like', auth, (req, res) => {
-    //console.log('body', req.body)
-    //console.log('user', req.user.id)
-
     Post.findByIdAndUpdate((req.body.postId), {
-        $push: { likes: req.user.id }
+        $push: { likes: req.user._id }
     }, {
         new: true
     }).exec((err, result) => {
@@ -101,11 +97,8 @@ router.put('/like', auth, (req, res) => {
 // @access  Private
 
 router.put('/unlike', auth, (req, res) => {
-    //console.log('body', req.body)
-    //console.log('user', req.user.id)
-
     Post.findByIdAndUpdate((req.body.postId), {
-        $pull: { likes: req.user.id }
+        $pull: { likes: req.user._id }
     }, {
         new: true
     }).exec((err, result) => {
@@ -122,17 +115,14 @@ router.put('/unlike', auth, (req, res) => {
 router.post('/', auth, (req, res) => {
 
     const newPost = new Post({
-        userID: req.user.id,
+        userID: req.user._id,
         content: req.body.content
     })
-
-    //console.log('new post', newPost)
 
     newPost
         .save()
         .then(post => {
             res.json(post)
-            //console.log(post)
         })
         .catch(err => console.log(err))
 })
@@ -142,7 +132,6 @@ router.post('/', auth, (req, res) => {
 // @access  Private
 
 router.get('/', auth, (req, res) => {
-    //console.log(req.user.id)
     Post
         .find()
         .populate('userID', 'first_name last_name profile_image _id')
@@ -156,15 +145,13 @@ router.get('/', auth, (req, res) => {
 // @access  Private
 
 router.get('/subscribedPost', auth, (req, res) => {
-    console.log('-',req.user)
-
     Post
-        .find({userID: req.user.following})
+        .find({ userID: req.user.following })
         .populate('userID', 'first_name last_name profile_image _id')
         .sort({ registration_date: -1 })
         .then(post => res.json(post))
         .catch(err => res.json(err))
-    
+
 })
 
 // @route   GET /api/posts/:id
@@ -172,9 +159,8 @@ router.get('/subscribedPost', auth, (req, res) => {
 // @access  Private
 
 router.get('/user', auth, (req, res) => {
-    //console.log(req.params)
     Post
-        .findById({ userID: req.user.id })
+        .findById({ userID: req.user._id })
         .sort({ registration_date: -1 })
         .then(post => res.json(post))
         .catch(err => res.json(err))
@@ -184,13 +170,10 @@ router.get('/user', auth, (req, res) => {
 // @desc    Delete post
 // @access  Private
 router.delete('/:id', auth, (req, res) => {
-    //console.log('deleted');
-
     Post
         .findById(req.params.id)
         .then(post => post.remove()
             .then(() => {
-                //console.log('deleted');
                 res.json({ success_delete: true })
             })
             .catch(() => res.json({ success_delete: false })))

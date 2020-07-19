@@ -1,10 +1,9 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Input } from 'reactstrap';
 import Axios from 'axios';
 import SinglePost from '../../components/single_post/SinglePost';
 import './posts.css';
 import { PostContext } from '../../context/PostContext';
-import Subscribed from './Subscribed';
 
 function Posts() {
     const [inputText, setInputText] = useState('');
@@ -54,23 +53,8 @@ function Posts() {
                 .catch((err) => console.log(err));
         }, []);  */
 
-
-    // get all posts
-    useEffect(() => {
-        const config: any = {
-            headers: {
-                'x-auth-token': `${storedToken}`,
-                'Content-Type': 'application/json',
-            }
-        }
-        Axios.get('/api/posts/subscribedPost', config)
-            .then((res) => console.log('subscribed',res.data))
-            .catch((err) => console.log(err));
-    }, []);
-
     return (
         <div className="center-post-div">
-            <h3 className="write-post-title">Write post</h3>
             <form onSubmit={submitPost}>
                 <Input
                     type="text"

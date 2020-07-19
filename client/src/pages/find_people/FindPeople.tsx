@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Button } from 'reactstrap';
+import { Button, Input } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../../context/AppContext';
 import avatar from '../../assets/avatar.png';
@@ -11,7 +11,7 @@ interface User {
     first_name: string,
     last_name: string,
     profile_image: string,
-    followers: Array<string>,
+    followers: any,
     following: Array<string>
 }
 
@@ -25,7 +25,6 @@ function FindPeople() {
 
     // follow
     const followUser = (id: any) => {
-        console.log('user ID:', id)
         const storedToken = localStorage.getItem('token')
         const body = {
             followId: id
@@ -37,12 +36,9 @@ function FindPeople() {
             }
         }
         Axios.put('/api/users/follow', body, config)
-            .then(res => console.log(res.data))
-            .catch(err => console.log(err))
     }
     // unfollow
     const unfollowUser = (id: any) => {
-        console.log('user ID:', id)
         const storedToken = localStorage.getItem('token')
         const body = {
             unfollowId: id
@@ -54,11 +50,24 @@ function FindPeople() {
             }
         }
         Axios.put('/api/users/unfollow', body, config)
-            .then(res => console.log(res.data))
-            .catch(err => console.log(err))
     }
 
-    const allUsersDisplayed = allUserWithoutAuthUser.map((user: User) => {
+    const [inputSearch, setInputSearch] = useState('')
+
+    const searchUser = (e: any) => {
+        e.preventDefault()
+        inputSearch.toLowerCase()
+        e.target[0].value = ''
+    }
+
+    const filterResult = allUserWithoutAuthUser.filter((user: { first_name: string, last_name: string }) => {
+        const userName = user.first_name + ' ' + user.last_name
+        if (userName.toLowerCase().includes(inputSearch)) {
+            return user
+        }
+    })
+
+    const allUsersDisplayed = filterResult.map((user: User) => {
         return (
             <div className="user-container" key={user._id}>
                 <div className="user-card">
@@ -71,14 +80,13 @@ function FindPeople() {
                         <p className="user-info2">
                             {user.first_name} {user.last_name}
                         </p>
-                        {!user.followers.includes(userID)
+                        {!(user.followers.map((follower: { _id: string }) => follower._id)).includes(userID)
                             ?
-                            <Button color="info" onClick={() => followUser(user._id)}>Follow</Button>
+                            <Button color="info" className="btn-find" onClick={() => followUser(user._id)}>Follow</Button>
                             :
-                            <Button color="info" onClick={() => unfollowUser(user._id)}>Unollow</Button>
-
-                        }
-                        <Button color="info" onClick={() => setIsOpenUserProfile(true)}>
+                            <Button color="info" className="btn-find" onClick={() => unfollowUser(user._id)}>Unfollow</Button>
+                        }{' '}
+                        <Button color="info" className="btn-find" onClick={() => setIsOpenUserProfile(true)}>
                             <Link
                                 to={{
                                     pathname: `/userProfile/${user._id}`,
@@ -96,8 +104,14 @@ function FindPeople() {
     })
 
     return (
-        <div>
-            <h2 className="title-users">Find People</h2>
+        <div className="center">
+            <form onSubmit={searchUser}>
+                <Input
+                    placeholder="Search user..."
+                    onChange={(e: any) => setInputSearch(e.target.value)}
+                    className="searchbox"
+                ></Input>
+            </form>
             {allUsersDisplayed}
         </div>
     )

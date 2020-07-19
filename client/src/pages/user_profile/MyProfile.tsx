@@ -10,6 +10,7 @@ import avatar from '../../assets/avatar.png'
 import Following from '../../components/following/Following'
 import Followers from '../../components/followers/Followers'
 import '../../components/followers/follow.css'
+import { Input } from 'reactstrap'
 
 interface Post {
     userID: {
@@ -32,7 +33,7 @@ function MyProfile() {
     })
     const [isEditOpen, setIsEditOpen] = useState(false)
     const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false)
-    const [following, setFollowing] = useState(null)
+    const [following, setFollowing] = useState(0)
     const [followers, setFollowers] = useState(0)
     const [followingUsers, setFollowingUsers] = useState<Array<FollowUser>>([{ first_name: '', last_name: '', profile_image: '' }])
     const [followersUsers, setFollowersUsers] = useState<Array<FollowUser>>([{ first_name: '', last_name: '', profile_image: '' }])
@@ -70,7 +71,40 @@ function MyProfile() {
                 })
             })
             .catch(err => console.log(err))
-    }, [])
+    }, [setUserID, storedToken])
+
+    const [inputText, setInputText] = useState('');
+    const { setPosts } = useContext(PostContext);
+
+    const config: any = {
+        headers: {
+            'x-auth-token': `${storedToken}`,
+            'Content-Type': 'application/json'
+        }
+    };
+
+    // create post
+    const submitPost = (e: any) => {
+        e.preventDefault()
+
+        const postData = {
+            content: inputText
+        }
+        Axios.post('/api/posts', postData, config)
+            .then((res) => {
+                const item: {
+                    content: string;
+                    _id: string;
+                    registration_date: string,
+                    likes: []
+                } = res.data;
+                setPosts(item.content, item._id, item.registration_date, item.likes);
+            })
+            .catch((err) => console.log(err));
+
+        e.target[0].value = ''
+    };
+
 
     return (
         <div className="profile-container">
@@ -78,31 +112,35 @@ function MyProfile() {
                 <i className="fa fa-edit"></i>
             </button>
             <div className="user-info">
-                <div className="user-info-img">
-                    <div className="img-circular">
-                        <img
-                            alt='avatar'
-                            className="user-profile-img2"
-                            src={userInfo.userPhoto ? userInfo.userPhoto : avatar}
-                            onClick={() => setIsPhotoModalOpen(true)}
-                        ></img>
-                    </div>
+                <div className="img-circular">
+                    <img
+                        alt='avatar'
+                        className="user-profile-img"
+                        src={userInfo.userPhoto ? userInfo.userPhoto : avatar}
+                        onClick={() => setIsPhotoModalOpen(true)}
+                    ></img>
                     <div className="middle">
                         <p className="update-photo">Update photo</p>
                     </div>
                 </div>
                 <p className="user-name">{userInfo.firstName} {userInfo.lastName}</p>
                 <p className="about-user">{userInfo.userBio}</p>
+                <button className="btn-follow" onClick={() => setIsFollowersOpen(!isFollowersOpen)}>
+                    <p className="follow-title">{followers} {followers && followers < 2 ? 'follower' : 'followers'} </p>
+                </button>
+                <button className="btn-follow" onClick={() => setIsFollowingOpen(!isFollowingOpen)}>
+                    <p className="follow-title">{following} following</p>
+                </button>
             </div>
-            <div className="user-posts">
-                <p className="my-posts-title">My Posts</p>
-            </div>
-            <button className="btn-follow" onClick={() => setIsFollowersOpen(!isFollowersOpen)}>
-                <p className="follow-title">{followers} {followers && followers < 2 ? 'follower' : 'followers'} </p>
-            </button>
-            <button className="btn-follow" onClick={() => setIsFollowingOpen(!isFollowingOpen)}>
-                <p className="follow-title">{following} following</p>
-            </button>
+            <hr/>
+            <form onSubmit={submitPost}>
+                <Input
+                    type="text"
+                    className="input-post-text input-profile-text"
+                    onChange={(e: any) => setInputText(e.target.value)}
+                    placeholder="What is on your mind?"
+                />
+            </form>
             {usersPosts.length === 0
                 ? <h3>No posts yet</h3>
                 : <SinglePost updatedPosts={usersPosts}></SinglePost>

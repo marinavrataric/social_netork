@@ -14,14 +14,19 @@
     padding: 6px 0;
 }
 .btn-follow{
-    border: 0.5px solid black;
-    background-color:transparent;
-    margin: 1px 4px;
-    border-radius: 10px;
-    padding: 0 10px;
+    border: none;
+    background-color:rgb(175, 60, 175);
+    color: white;
+    width: 120px;
+    margin: 1px 10px;
+    border-radius: 16px;
+    padding: 5px 15px;
 }
 .btn-follow:focus{
     outline: none;
+}
+.btn-follow:hover{
+    background-color:rgb(228, 61, 228);
 }
 .follow-title{
     margin: 0;

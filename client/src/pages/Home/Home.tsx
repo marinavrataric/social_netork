@@ -12,20 +12,22 @@ function Home() {
     const toggleSignIn = () => setModalSignIn(!modalSignIn)
 
     return (
-        <div className="center-div">
-            <h1 className="title">Social Network</h1>
-            <div className="buttons">
-                <button
-                    className="btn-signup"
-                    onClick={toggleSignUp}
-                >Sign Up</button>
-                <button
-                    className="btn-signin"
-                    onClick={toggleSignIn}
-                >Sign In</button>
+        <div className="home">
+            <div className="center-div">
+                <h1 className="title">Social Network</h1>
+                <div className="buttons">
+                    <button
+                        className="btn-signup"
+                        onClick={toggleSignUp}
+                    >Sign Up</button>
+                    <button
+                        className="btn-signin"
+                        onClick={toggleSignIn}
+                    >Sign In</button>
+                </div>
+                {modalSignUp && <Register toggle={toggleSignUp} modal={modalSignUp} />}
+                {modalSignIn && <Login toggle={toggleSignIn} modal={modalSignIn} />}
             </div>
-            {modalSignUp && <Register toggle={toggleSignUp} modal={modalSignUp} />}
-            {modalSignIn && <Login toggle={toggleSignIn} modal={modalSignIn} />}
         </div>
     )
 }

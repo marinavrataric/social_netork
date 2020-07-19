@@ -24,7 +24,6 @@ router.post('/', (req, res) => {
         .findOne({ email })
         .then(user => {
             if (!user) res.status(400).json({ msg: `User doesn't exist.` })
-            //console.log(user)
             // validate password
             bcrypt
                 .compare(password, user.password)
@@ -64,7 +63,7 @@ router.post('/', (req, res) => {
 
 router.get('/user', auth, (req, res) => {
     User
-        .findById(req.user.id)
+        .findById(req.user._id)
         .select('-password')
         .populate('followers', 'first_name last_name profile_image _id')
         .populate('following', 'first_name last_name profile_image _id')
@@ -79,6 +78,8 @@ router.get('/user', auth, (req, res) => {
 router.get('/users', auth, (req, res) => {
     User
         .find()
+        .populate('followers', 'first_name last_name profile_image _id')
+        .populate('following', 'first_name last_name profile_image _id')
         .sort({ registration_date: -1 })
         .then(user => res.json(user))
 })

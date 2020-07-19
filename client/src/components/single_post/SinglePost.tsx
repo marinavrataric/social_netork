@@ -9,6 +9,7 @@ import moment from 'moment';
 import PostTime from './post-creation-time/PostTime';
 import FirstThreeComments from './single_comment/FirstThreeComments';
 import AllComments from './single_comment/AllComments';
+import avatar from '../../assets/avatar.png'
 
 interface Post {
     _id: string,
@@ -37,7 +38,7 @@ function SinglePost(props: any) {
     const [isShown, setIsShown] = useState(false)
     const [clickedPostId, setClickedPostId] = useState()
 
-    const { deletePost, likePost, unLikePost, updatedPosts } = useContext(PostContext);
+    const { deletePost, likePost, unLikePost } = useContext(PostContext);
     const { userID } = useContext(AppContext)
 
     const storedToken = localStorage.getItem('token');
@@ -123,7 +124,7 @@ function SinglePost(props: any) {
                                         >
                                             <img
                                                 className="user-photo-mini"
-                                                src={`http://localhost:5000/${post.userID.profile_image}`}
+                                                src={post.userID.profile_image === '' ? avatar : `http://localhost:5000/${post.userID.profile_image}`}
                                                 alt='user profile img'
                                             ></img>
                                         </Link>
@@ -165,7 +166,6 @@ function SinglePost(props: any) {
                                 </div>
 
                                 <hr />
-
                                 {/*show comments*/}
                                 <div className="comments-container">
                                     {(isShown && post._id === clickedPostId) ? AllComments(post) : FirstThreeComments(post)}

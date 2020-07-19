@@ -11,12 +11,12 @@ const auth = require('../middleware/auth')
 // following
 router.put('/follow', auth, (req, res) => {
     User.findByIdAndUpdate(req.body.followId, {
-            $push: { followers: req.user.id }
+            $push: { followers: req.user._id }
         },{
             new: true
         }, (err, result) => {
            if(err) res.status(422).json({msFg: err})
-           User.findByIdAndUpdate(req.user.id, {
+           User.findByIdAndUpdate(req.user._id, {
                $push: {following: req.body.followId}
            }, {
                new: true
@@ -30,12 +30,12 @@ router.put('/follow', auth, (req, res) => {
 // unfollowing
 router.put('/unfollow', auth, (req, res) => {
     User.findByIdAndUpdate(req.body.unfollowId, {
-            $pull: { followers: req.user.id }
+            $pull: { followers: req.user._id }
         },{
             new: true
         }, (err, result) => {
            if(err) res.status(422).json({msg: err})
-           User.findByIdAndUpdate(req.user.id, {
+           User.findByIdAndUpdate(req.user._id, {
                $pull: {following: req.body.unfollowId}
            }, {
                new: true
@@ -100,9 +100,6 @@ router.put('/:id', (req, res) => {
 // @access  Public
 
 router.post('/', (req, res) => {
-
-    //console.log(req.body)
-
     const { first_name, last_name, email, password } = req.body
 
     // Filed validation

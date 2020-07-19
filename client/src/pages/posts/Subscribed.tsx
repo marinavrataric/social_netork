@@ -7,17 +7,17 @@ function Subscribed() {
 
     // get all posts
     const storedToken = localStorage.getItem('token');
-    useEffect(() => {
-        const config: any = {
-            headers: {
-                'x-auth-token': `${storedToken}`,
-                'Content-Type': 'application/json',
-            }
+    const config: any = {
+        headers: {
+            'x-auth-token': `${storedToken}`,
+            'Content-Type': 'application/json',
         }
+    }
+    useEffect(() => {
         Axios.get('/api/posts/subscribedPost', config)
             .then((res) => setSubscribedPost(res.data))
             .catch((err) => console.log(err));
-    }, []);
+    }, [config]);
     
     return (
         <div className="center-post-div">           

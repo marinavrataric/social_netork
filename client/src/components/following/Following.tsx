@@ -1,5 +1,6 @@
 import React from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap'
+import avatar from '../../assets/avatar.png'
 
 interface FollowUser {
     first_name: string,
@@ -13,12 +14,12 @@ interface Props {
     setIsFollowingOpen: any
 }
 
-function Following(props: Props) {
+function Following(props: any) {
     const followingUserList = props.followingUsers.map((following: FollowUser) => {
         return (
             <div className="follower-user-container">
                 <div className="img-comment-circular-mini">
-                    <img alt="avatar" className="user-photo-mini" src={`http://localhost:5000/${following.profile_image}`}></img>
+                <img alt="avatar" className="user-photo-mini" src={following.profile_image === "" ? avatar : `http://localhost:5000/${following.profile_image}`}></img>
                 </div>
                 <h5 className="follow-user-name">{following.first_name} {following.last_name}</h5>
             </div>
@@ -31,7 +32,7 @@ function Following(props: Props) {
                 <ModalHeader>Following users</ModalHeader>
                 <ModalBody>{followingUserList}</ModalBody>
                 <ModalFooter>
-                    <Button onClick={() => props.setIsFollowingOpen(false)}>Close</Button>
+                    <Button color="success" onClick={() => props.setIsFollowingOpen(false)}>Close</Button>
                 </ModalFooter>
             </Modal>
         </div>
