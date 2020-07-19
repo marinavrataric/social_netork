@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import './home.css'
 import Register from '../../modals/Register'
 import Login from '../../modals/Login'
+import { AppContext } from '../../context/AppContext'
 
 function Home() {
 
@@ -10,6 +11,8 @@ function Home() {
 
     const [modalSignIn, setModalSignIn] = useState(false)
     const toggleSignIn = () => setModalSignIn(!modalSignIn)
+
+    const context = useContext(AppContext)
 
     return (
         <div className="home">

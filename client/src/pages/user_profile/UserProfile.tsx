@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import './profile.css'
 import avatar from '../../assets/avatar.png'
 import { useLocation } from 'react-router-dom'
@@ -39,6 +39,8 @@ function UserProfile() {
     const { userID } = useContext(AppContext);
     const [isFollowingOpen, setIsFollowingOpen] = useState(false)
     const [isFollowersOpen, setIsFollowersOpen] = useState(false)
+    const [followingUsers, setFollowingUsers] = useState<Array<FollowUser>>([{ first_name: '', last_name: '', profile_image: '' }])
+    const [followersUsers, setFollowersUsers] = useState<Array<FollowUser>>([{ first_name: '', last_name: '', profile_image: '' }])
 
     const userProfile = {
         _id: location.state._id,

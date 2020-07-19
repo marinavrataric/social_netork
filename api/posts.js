@@ -28,7 +28,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
             .filter(comment => (String(comment._id)) !== req.params.comment_id)
 
 
-        //console.log('remove index',removeIndex)
+        console.log('remove index',removeIndex)
 
         post.comments.splice(removeIndex, 1);
 
@@ -57,7 +57,7 @@ router.put('/comment', auth, (req, res) => {
     }, {
         new: true
     })
-        .populate('comments.userID', "_id first_name last_name profile_image")
+        .populate('comments.userID')
         .exec((err, result) => {
             if (err) res.status(422).json({ msg: err })
             res.json(result)
@@ -71,7 +71,7 @@ router.put('/comment', auth, (req, res) => {
 
 router.get('/comment', auth, (req, res) => {
     Post.find()
-        .populate('userID comments.userID', "_id first_name last_name profile_image")
+        .populate('userID comments.userID')
         .sort({ registration_date: -1 })
         .then(result => res.json(result))
         .catch(err => res.json({ msg: err }))

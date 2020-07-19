@@ -107,7 +107,7 @@ function SinglePost(props: any) {
                                     onClick={() => {
                                         post._id && handleDeletePost(post._id);
                                     }}
-                                ><i className="fa fa-remove" style={{ color: "red", fontSize: '20px'}}></i>
+                                ><i className="fa fa-remove" style={{ color: "red", fontSize: '20px' }}></i>
                                 </button>}
                             </div>
 
@@ -180,7 +180,8 @@ function SinglePost(props: any) {
                                     <Input className="text-comment-input" placeholder='Add comment'></Input>
                                 </form>
                             </div>
-                        </div>)
+                        </div>
+                    )
                 );
             })}
         </div>

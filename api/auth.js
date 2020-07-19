@@ -65,8 +65,8 @@ router.get('/user', auth, (req, res) => {
     User
         .findById(req.user._id)
         .select('-password')
-        .populate('followers', 'first_name last_name profile_image _id')
-        .populate('following', 'first_name last_name profile_image _id')
+        .populate('followers')
+        .populate('following')
         .then(user => res.json({ user }))
 })
 
@@ -78,8 +78,8 @@ router.get('/user', auth, (req, res) => {
 router.get('/users', auth, (req, res) => {
     User
         .find()
-        .populate('followers', 'first_name last_name profile_image _id')
-        .populate('following', 'first_name last_name profile_image _id')
+        .populate('followers')
+        .populate('following')
         .sort({ registration_date: -1 })
         .then(user => res.json(user))
 })
