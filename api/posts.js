@@ -9,39 +9,18 @@ const Post = require('../models/Post')
 // @desc    Delete comment
 // @access  Private
 
-router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
-    try {
-        const post = await Post.findById(req.params.id);
-
-        // Pull out comment
-        const comment = post.comments.find(
-            comment => comment.id === req.params.comment_id
-        );
-
-        // Make sure comment exists
-        if (!comment) {
-            return res.status(404).json({ msg: 'Comment does not exist' });
-        }
-
-        // Get remove index
-        const removeIndex = post.comments
-            .filter(comment => (String(comment._id)) !== req.params.comment_id)
-
-
-        console.log('remove index',removeIndex)
-
-        post.comments.splice(removeIndex, 1);
-
-        console.log(post)
-        
-        await post.save();
-
-        res.json(post.comments);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
-    }
-});
+router.delete("/comment/:id/:comment_id", auth, (req, res) => {
+    console.log(req.params.comment_id)
+    Post.findByIdAndUpdate((req.params.id), {
+        $pull: { comments: {_id:  req.params.comment_id} }
+    }, {
+        new: true
+    }).exec((err, result) => {
+        if (err) res.status(422).json({ msg: err })
+        console.log(result)
+        res.json(result)
+    })
+})
 
 // @route   PUT /api/posts/comment
 // @desc    Create comment
