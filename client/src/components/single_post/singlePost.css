@@ -26,8 +26,8 @@
 }
 .left-align {
     float: left;
-    width: 96%;
-    margin-top: 10px;
+    width: 100%;
+    /* margin-top: -27px; */
 }
 .number-of-likes {
     display: inline-block;
@@ -155,4 +155,7 @@ hr {
     float: right;
     margin-top: -29px;
     padding-right: 5px;
+}
+.dropdown{
+    display: inline;
 }

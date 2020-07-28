@@ -5,6 +5,22 @@ const auth = require('../middleware/auth')
 
 const Post = require('../models/Post')
 
+// @route   DELETE /api/posts/createPost/:id
+// @desc    Set visibility to post (public or private)
+// @access  Private
+
+router.put('/createPost/:id', auth, (req, res) => {
+    Post.findByIdAndUpdate((req.body.postId), {
+        visibility: req.body.visibility
+    }, {
+        new: true
+    }).exec((err, result) => {
+        if (err) res.status(422).json({ msg: err })
+        console.log(result)
+        res.json(result)
+    })
+})
+
 // @route   DELETE /api/posts/comment/:id
 // @desc    Delete comment
 // @access  Private
@@ -105,6 +121,8 @@ router.post('/', auth, (req, res) => {
         })
         .catch(err => console.log(err))
 })
+
+
 
 // @route   GET /api/posts
 // @desc    get all posts

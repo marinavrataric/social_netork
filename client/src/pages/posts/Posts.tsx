@@ -1,13 +1,15 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Input } from 'reactstrap';
 import Axios from 'axios';
 import SinglePost from '../../components/single_post/SinglePost';
 import './posts.css';
 import { PostContext } from '../../context/PostContext';
+import { AppContext } from '../../context/AppContext';
 
 function Posts() {
     const [inputText, setInputText] = useState('');
     const { setPosts, updatedPosts } = useContext(PostContext);
+    const { userID } = useContext(AppContext)
 
     const storedToken = localStorage.getItem('token');
     const config: any = {
@@ -39,19 +41,31 @@ function Posts() {
         e.target[0].value = ''
     };
 
-    /*     const [state, setstate] = useState()
-           // get all posts
-           useEffect(() => {
-            const config: any = {
-                headers: {
-                    'x-auth-token': `${storedToken}`,
-                    'Content-Type': 'application/json',
-                }
+    const [postsArray, setPostsArray] = useState([])
+    // get all posts
+    useEffect(() => {
+        const config: any = {
+            headers: {
+                'x-auth-token': `${storedToken}`,
+                'Content-Type': 'application/json',
             }
-            Axios.get('/api/posts/comment', config)
-                .then((res) => setstate(res.data))
-                .catch((err) => console.log(err));
-        }, []);  */
+        }
+        Axios.get('/api/posts/comment', config)
+            .then((res) => setPostsArray(res.data))
+            .catch((err) => console.log(err));
+    }, []);
+
+    const publicPosts = postsArray?.filter((post: any) => {
+        if (post.visibility === 'Public') return post
+    });
+    console.log('public', publicPosts)
+
+    const postsPrivate = postsArray?.filter((post: any) => {
+        if (post.visibility === 'Private') return post
+    })
+    console.log('private', postsPrivate)
+
+
 
     return (
         <div className="center-post-div">
@@ -64,7 +78,7 @@ function Posts() {
                 />
             </form>
             <div className="all-posts">
-                <SinglePost updatedPosts={updatedPosts} />
+                <SinglePost updatedPosts={publicPosts} />
             </div>
         </div>
     );

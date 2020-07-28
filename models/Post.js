@@ -20,6 +20,11 @@ const PostSchema = new Schema({
             ref: "user"
         }
     ],
+    visibility: {
+        type: String,
+        value: '',
+        default: "Public"
+    },
     comments: [
         {
             text: String,
