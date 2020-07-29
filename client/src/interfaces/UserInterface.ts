@@ -6,6 +6,6 @@ export interface UserInterface {
     last_name: string;
     user_bio: string;
     profile_image: string;
-    following: Array<string>;
+    following: FollowUserInterface[];
     followers: FollowUserInterface[];
 }

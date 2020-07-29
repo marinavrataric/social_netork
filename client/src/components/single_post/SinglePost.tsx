@@ -1,30 +1,24 @@
-import React, { useState, useContext, ChangeEvent, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
 import './singlePost.css';
 import Axios from 'axios';
 import { PostContext } from '../../context/PostContext';
 import { AppContext } from '../../context/AppContext';
-import { Input, Dropdown } from 'reactstrap';
+import { Input } from 'reactstrap';
 import PostTime from './post-creation-time/PostTime';
-import FirstThreeComments from './single_comment/FirstThreeComments';
-import AllComments from './single_comment/AllComments';
-import avatar from '../../assets/avatar.png'
+import FirstThreeComments from '../comments/FirstThreeComments';
+import AllComments from '../comments/AllComments';
+import { config } from '../../constants/generalConstants';
+import DropdownPostOptions from '../dropdown/DropdownPostOptions';
+import UserInfoComment from '../user_info_comment/UserInfoComment';
+import CommentsButtons from '../comment_buttons/CommentsButtons';
 
-function SinglePost({post, diffDuration}: any) {
+function SinglePost({ post, diffDuration }: any) {
     const [isShown, setIsShown] = useState(false)
     const [clickedPostId, setClickedPostId] = useState()
     const [dropdownValue, setdropdownValue] = useState('public')
 
     const { deletePost, likePost, unLikePost } = useContext(PostContext);
     const { userID } = useContext(AppContext)
-
-    const storedToken = localStorage.getItem('token');
-    const config = {
-        headers: {
-            'x-auth-token': `${storedToken}`,
-            'Content-Type': 'application/json',
-        }
-    }
 
     // create comment
     const createComment = (text: string, postId: string) => {
@@ -75,115 +69,41 @@ function SinglePost({post, diffDuration}: any) {
             .catch(err => console.log(err))
     }
 
-
-    const [postid, setpostid] = useState('')
-
     return (
         <div className="all-posts">
-                        <div className="single-post-container" >
-                            {/*delete post*/}
-                            <div className="right-align">
-                                <div className="dropdown">
-                                    {post.userID._id === userID &&
-                                        <Dropdown onClick={() => setVisible(post._id)}>
-                                            {post.visibility === 'Public' ?
-                                                <select
-                                                    onClick={() => { setpostid(post._id); }}
-                                                    value={dropdownValue}
-                                                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setdropdownValue(e.target.value)}>
-                                                    <option value="Public">Public</option>
-                                                    <option value="Private">Private</option>
-                                                </select>
-                                                :
-                                                <select
-                                                    onClick={() => { setpostid(post._id); }}
-                                                    value={dropdownValue}
-                                                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setdropdownValue(e.target.value)}>
-                                                    <option value="Private">Private</option>
-                                                    <option value="Public">Public</option>
-                                                </select>}
-                                        </Dropdown>
-                                    }
-                                </div>
-                                {post.userID._id === userID && <button
-                                    className="btn btn-delete"
-                                    onClick={() => {
-                                        post._id && handleDeletePost(post._id);
-                                    }}
-                                ><i className="fa fa-remove" style={{ color: "red", fontSize: '20px' }}></i>
-                                </button>}
-                            </div>
-
-                            <div className="left-align">
-                                {/*post user info and time*/}
-                                <div className="user-name-photo">
-                                    <div className="img-circular-mini">
-                                        <Link
-                                            to={{
-                                                pathname: `/userProfile/${post.userID._id}`,
-                                                state: post.userID,
-                                            }}
-                                            style={{ textDecoration: 'none' }}
-                                        >
-                                            <img
-                                                className="user-photo-mini"
-                                                src={post.userID.profile_image === '' ? avatar : `http://localhost:5000/${post.userID.profile_image}`}
-                                                alt='user profile img'
-                                            ></img>
-                                        </Link>
-                                    </div>
-
-                                    <div className="right-user-name-post">
-                                        {post.userID && <p className="user-name-post">
-                                            {post.userID.first_name} {post.userID.last_name}
-                                        </p>}
-                                        {PostTime(diffDuration.days(), diffDuration.hours(), diffDuration.minutes())}
-                                    </div>
-                                </div>
-
-                                {/*post title*/}
-                                <div className="user-post-text-container">
-                                    <h2 className="user-post-text">{post.content}</h2>
-                                </div>
-                                <hr />
-
-                            </div>
-                            {/*like or dislike post*/}
-                            <div className="buttons">
-                                <p className="number-of-likes">
-                                    {post.likes && post.likes.length} {post.likes && post.likes.length > 1 ? 'likes' : 'like'}
-                                </p>
-                                {post.likes && (post.likes.includes(userID))
-                                    ?
-                                    <button className="btn btn-like" onClick={() => unlikePost(post._id)}>
-                                        <i className="fa fa-thumbs-up" aria-hidden="true"></i>
-                                    </button>
-                                    :
-                                    <button className="btn btn-like" onClick={() => handleLikePost(post._id)} >
-                                        <i className="fa fa-thumbs-up" style={{ color: "gray" }} aria-hidden="true"></i>
-                                    </button>
-                                }
-                                <button onClick={() => showComments(post)} className="btn-comment">
-                                    {post.comments.length} {post.comments.length > 1 ? 'comments' : 'comment'}
-                                </button>
-                            </div>
-
-                            <hr />
-                            {/*show comments*/}
-                            <div className="comments-container">
-                                {(isShown && post._id === clickedPostId) ? AllComments(post) : FirstThreeComments(post)}
-                            </div>
-
-                            {/*add new comment*/}
-                            <form onSubmit={(e: any) => {
-                                e.preventDefault()
-                                createComment(e.target[0].value, post._id)
-                                e.target[0].value = ''
-                            }}>
-                                <Input className="text-comment-input" placeholder='Add comment'></Input>
-                            </form>
-                        </div>
-                   
+            <div className="single-post-container" >
+                <div className="right-align">
+                    {post.userID._id === userID &&
+                        <DropdownPostOptions post={post} setVisible={setVisible} dropdownValue={dropdownValue} setdropdownValue={setdropdownValue} />
+                    }
+                    {post.userID._id === userID &&
+                        <button
+                            className="btn btn-delete"
+                            onClick={() => post._id && handleDeletePost(post._id)}
+                        ><i className="fa fa-remove" style={{ color: "red", fontSize: '20px' }}></i>
+                        </button>
+                    }
+                </div>
+                <div className="left-align">
+                    <UserInfoComment post={post} PostTime={PostTime} diffDuration={diffDuration} />
+                    <div className="user-post-text-container">
+                        <h2 className="user-post-text">{post.content}</h2>
+                    </div>
+                    <hr />
+                </div>
+                <CommentsButtons post={post} unlikePost={unlikePost} handleLikePost={handleLikePost} showComments={showComments} />
+                <hr />
+                <div className="comments-container">
+                    {(isShown && post._id === clickedPostId) ? AllComments(post) : FirstThreeComments(post)}
+                </div>
+                <form onSubmit={(e: any) => {
+                    e.preventDefault()
+                    createComment(e.target[0].value, post._id)
+                    e.target[0].value = ''
+                }}>
+                    <Input className="text-comment-input" placeholder='Add comment'></Input>
+                </form>
+            </div>
         </div>
     );
 }
