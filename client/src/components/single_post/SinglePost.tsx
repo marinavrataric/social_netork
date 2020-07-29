@@ -10,30 +10,6 @@ import FirstThreeComments from './single_comment/FirstThreeComments';
 import AllComments from './single_comment/AllComments';
 import avatar from '../../assets/avatar.png'
 
-interface Post {
-    _id: string,
-    content: string,
-    registration_date: string,
-    comments: [{
-        id: string,
-        text: string,
-        userID: {
-            first_name: string,
-            last_name: string,
-            profile_image: string,
-            _id: string
-        }
-    }],
-    likes: [string],
-    userID: {
-        first_name: string,
-        last_name: string,
-        profile_image: string,
-        _id: string
-    },
-    visibility: string
-}
-
 function SinglePost({post, diffDuration}: any) {
     const [isShown, setIsShown] = useState(false)
     const [clickedPostId, setClickedPostId] = useState()
@@ -104,7 +80,6 @@ function SinglePost({post, diffDuration}: any) {
 
     return (
         <div className="all-posts">
-           
                         <div className="single-post-container" >
                             {/*delete post*/}
                             <div className="right-align">

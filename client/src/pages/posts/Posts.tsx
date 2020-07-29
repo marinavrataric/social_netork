@@ -6,31 +6,7 @@ import './posts.css';
 import { PostContext } from '../../context/PostContext';
 import { AppContext } from '../../context/AppContext';
 import moment from 'moment';
-
-
-interface Post {
-    _id: string,
-    content: string,
-    registration_date: string,
-    comments: [{
-        id: string,
-        text: string,
-        userID: {
-            first_name: string,
-            last_name: string,
-            profile_image: string,
-            _id: string
-        }
-    }],
-    likes: [string],
-    userID: {
-        first_name: string,
-        last_name: string,
-        profile_image: string,
-        _id: string
-    },
-    visibility: string
-}
+import { PostInterface } from '../../interfaces/PostInterface';
 
 function Posts() {
     const [inputText, setInputText] = useState('');
@@ -91,7 +67,6 @@ function Posts() {
 
     const dateNow = new Date()
 
-
     return (
         <div className="center-post-div">
             <form onSubmit={submitPost}>
@@ -103,7 +78,7 @@ function Posts() {
                 />
             </form>
             <div className="all-posts">
-                {updatedPosts.map((post: Post) => {
+                {updatedPosts.map((post: PostInterface) => {
                     const startDate = moment(post.registration_date)
                     const timeEnd = moment(dateNow)
                     const diff = timeEnd.diff(startDate)

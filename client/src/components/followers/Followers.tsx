@@ -2,21 +2,10 @@ import React from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap'
 import avatar from '../../assets/avatar.png'
 import { Link } from 'react-router-dom'
+import { FollowUserInterface } from '../../interfaces/FollowUserInterface'
 
-interface FollowUser {
-    first_name: string,
-    last_name: string,
-    profile_image: string,
-    _id: string
-}
-interface Props {
-    followersUsers: Array<FollowUser>,
-    isFollowersOpen: boolean,
-    setIsFollowersOpen: any
-}
-
-function Followers(props: any) {
-    const followersUserList = props.followersUsers.map((followers: FollowUser) => {
+function Followers({followersUsers, isFollowersOpen, setIsFollowersOpen}: any) {
+    const followersUserList = followersUsers.map((followers: FollowUserInterface) => {
         return (
             <div className="follower-user-container">
                 <div className="img-comment-circular-mini" >
@@ -41,11 +30,11 @@ function Followers(props: any) {
 
     return (
         <div className="following-user-list">
-            <Modal isOpen={props.isFollowersOpen} toggle={() => props.setIsFollowersOpen(!props.isFollowersOpen)}>
+            <Modal isOpen={isFollowersOpen} toggle={() => setIsFollowersOpen(!isFollowersOpen)}>
                 <ModalHeader>Followers</ModalHeader>
                 <ModalBody>{followersUserList}</ModalBody>
                 <ModalFooter>
-                    <Button color="success" onClick={() => props.setIsFollowersOpen(false)}>Close</Button>
+                    <Button color="success" onClick={() => setIsFollowersOpen(false)}>Close</Button>
                 </ModalFooter>
             </Modal>
         </div>

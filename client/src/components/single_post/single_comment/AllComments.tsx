@@ -2,31 +2,9 @@ import React, { useContext } from 'react'
 import Axios from 'axios'
 import avatar from '../../../assets/avatar.png'
 import { AppContext } from '../../../context/AppContext';
+import { PostInterface } from '../../../interfaces/PostInterface';
 
-interface Post {
-    _id: string,
-    content: string,
-    registration_date: string,
-    comments: [{
-        id: string,
-        text: string,
-        userID: {
-            first_name: string,
-            last_name: string,
-            profile_image: string,
-            _id: string
-        }
-    }],
-    likes: [string],
-    userID: {
-        first_name: string,
-        last_name: string,
-        profile_image: string,
-        _id: string
-    }
-}
-
-function AllComments(post: Post) {
+function AllComments(post: PostInterface) {
     const { userID } = useContext(AppContext)
 
     const storedToken = localStorage.getItem('token');

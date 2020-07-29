@@ -12,19 +12,8 @@ import Followers from '../../components/followers/Followers'
 import '../../components/followers/follow.css'
 import { Input } from 'reactstrap'
 import moment from 'moment';
-
-interface Post {
-    userID: {
-        _id: string
-    },
-    registration_date: string,
-}
-
-interface FollowUser {
-    first_name: string,
-    last_name: string,
-    profile_image: string
-}
+import { FollowUserInterface } from '../../interfaces/FollowUserInterface'
+import { PostInterface } from '../../interfaces/PostInterface'
 
 function MyProfile() {
     const [userInfo, setUserInfo] = useState({
@@ -37,8 +26,8 @@ function MyProfile() {
     const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false)
     const [following, setFollowing] = useState(0)
     const [followers, setFollowers] = useState(0)
-    const [followingUsers, setFollowingUsers] = useState<Array<FollowUser>>([{ first_name: '', last_name: '', profile_image: '' }])
-    const [followersUsers, setFollowersUsers] = useState<Array<FollowUser>>([{ first_name: '', last_name: '', profile_image: '' }])
+    const [followingUsers, setFollowingUsers] = useState<Array<FollowUserInterface>>([{_id: '', first_name: '', last_name: '', profile_image: '' }])
+    const [followersUsers, setFollowersUsers] = useState<Array<FollowUserInterface>>([{_id: '', first_name: '', last_name: '', profile_image: '' }])
     const [isFollowingOpen, setIsFollowingOpen] = useState(false)
     const [isFollowersOpen, setIsFollowersOpen] = useState(false)
 
@@ -49,7 +38,7 @@ function MyProfile() {
 
     // get users posts
     const allPostsCopy = updatedPosts
-    const usersPosts = allPostsCopy.filter((post: Post) => (post.userID && post.userID._id === userID))
+    const usersPosts = allPostsCopy.filter((post: PostInterface) => (post.userID && post.userID._id === userID))
 
     // get user data
     useEffect(() => {
@@ -147,7 +136,7 @@ function MyProfile() {
             {usersPosts.length === 0
                 ? <h3>No posts yet</h3>
                 :  
-                usersPosts.map((post: Post) => {
+                usersPosts.map((post: PostInterface) => {
                     const startDate = moment(post.registration_date)
                     const timeEnd = moment(dateNow)
                     const diff = timeEnd.diff(startDate)

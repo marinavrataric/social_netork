@@ -9,40 +9,16 @@ import Axios from 'axios'
 import { AppContext } from '../../context/AppContext'
 import Following from '../../components/following/Following'
 import Followers from '../../components/followers/Followers'
-
-interface User {
-    _id: string,
-    first_name: string,
-    last_name: string,
-    user_bio: string,
-    profile_image: string,
-    following: Array<string>,
-    followers: Array<string>
-}
-
-interface Post {
-    visibility: string,
-    userID: {
-        _id: string,
-        followers: any
-    }
-}
-
-interface FollowUser {
-    first_name: string,
-    last_name: string,
-    profile_image: string
-}
-
+import { PostInterface } from '../../interfaces/PostInterface'
+import { UserInterface } from '../../interfaces/UserInterface'
+import { FollowUserInterface } from '../../interfaces/FollowUserInterface'
 
 function UserProfile() {
     const { updatedPosts } = useContext(PostContext)
-    const location = useLocation<User>()
+    const location = useLocation<UserInterface>()
     const { userID } = useContext(AppContext);
     const [isFollowingOpen, setIsFollowingOpen] = useState(false)
     const [isFollowersOpen, setIsFollowersOpen] = useState(false)
-    const [followingUsers, setFollowingUsers] = useState<Array<FollowUser>>([{ first_name: '', last_name: '', profile_image: '' }])
-    const [followersUsers, setFollowersUsers] = useState<Array<FollowUser>>([{ first_name: '', last_name: '', profile_image: '' }])
 
     const userProfile = {
         _id: location.state._id,
@@ -56,7 +32,7 @@ function UserProfile() {
 
     // get users posts
     const allPostsCopy = updatedPosts
-    const usersPosts = allPostsCopy.filter((post: Post) => (post.userID && post.userID._id === userProfile._id))
+    const usersPosts = allPostsCopy.filter((post: PostInterface) => (post.userID && post.userID._id === userProfile._id))
 
     const storedToken = localStorage.getItem('token')
 
@@ -74,6 +50,7 @@ function UserProfile() {
         }
         Axios.put('/api/users/follow', body, config)
     }
+    
     // unfollow
     const unfollowUser = (id: any) => {
         const body = {
@@ -98,7 +75,7 @@ function UserProfile() {
             .catch((err) => console.log(err));
     }, []);
 
-    const privatePosts = postsArray?.filter((post: Post) => {
+    const privatePosts = postsArray?.filter((post: PostInterface) => {
         if (post.userID.followers.includes(userProfile._id)) return post
     });
     console.log(privatePosts)

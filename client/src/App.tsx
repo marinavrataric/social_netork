@@ -2,12 +2,7 @@ import React, { useState, useReducer, useEffect } from 'react'
 import NavigationRouter from './app_routes/NavigationRouter'
 import { AppContext } from './context/AppContext'
 import axios from 'axios'
-
-interface State {
-    isLoading: boolean,
-    user_data: {},
-    isAuthenticated: boolean
-}
+import { ReducerStateInterface } from './interfaces/ReducerStateInterface'
 
 function App() {
     const [token, setToken] = useState('')
@@ -21,7 +16,7 @@ function App() {
         isAuthenticated: false
     }
 
-    const reducer = (state: State, action: any) => {
+    const reducer = (state: ReducerStateInterface, action: any) => {
         switch (action.type) {
             case 'REGISTER_SUCCESS':
             case 'LOGIN_SUCCESS':

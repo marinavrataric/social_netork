@@ -5,15 +5,7 @@ import { AppContext } from '../../context/AppContext';
 import avatar from '../../assets/avatar.png';
 import './findPeople.css';
 import Axios from 'axios';
-
-interface User {
-    _id: string,
-    first_name: string,
-    last_name: string,
-    profile_image: string,
-    followers: any,
-    following: Array<string>
-}
+import { UserInterface } from '../../interfaces/UserInterface';
 
 function FindPeople() {
 
@@ -21,7 +13,7 @@ function FindPeople() {
 
     const [isOpenUserProfile, setIsOpenUserProfile] = useState(false);
 
-    const allUserWithoutAuthUser = allUsers.filter((user: User) => (user._id !== userID))
+    const allUserWithoutAuthUser = allUsers.filter((user: UserInterface) => (user._id !== userID))
 
     // follow
     const followUser = (id: any) => {
@@ -67,7 +59,7 @@ function FindPeople() {
         }
     })
 
-    const allUsersDisplayed = filterResult.map((user: User) => {
+    const allUsersDisplayed = filterResult.map((user: UserInterface) => {
         return (
             <div className="user-container" key={user._id}>
                 <div className="user-card">
