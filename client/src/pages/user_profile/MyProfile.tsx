@@ -11,11 +11,13 @@ import Following from '../../components/following/Following'
 import Followers from '../../components/followers/Followers'
 import '../../components/followers/follow.css'
 import { Input } from 'reactstrap'
+import moment from 'moment';
 
 interface Post {
     userID: {
         _id: string
-    }
+    },
+    registration_date: string,
 }
 
 interface FollowUser {
@@ -105,6 +107,7 @@ function MyProfile() {
         e.target[0].value = ''
     };
 
+    const dateNow = new Date()
 
     return (
         <div className="profile-container">
@@ -143,7 +146,15 @@ function MyProfile() {
             </form>
             {usersPosts.length === 0
                 ? <h3>No posts yet</h3>
-                : <SinglePost updatedPosts={usersPosts}></SinglePost>
+                :  
+                usersPosts.map((post: Post) => {
+                    const startDate = moment(post.registration_date)
+                    const timeEnd = moment(dateNow)
+                    const diff = timeEnd.diff(startDate)
+                    const diffDuration = moment.duration(diff)
+                    return <SinglePost post={post} diffDuration={diffDuration}/>
+                }
+                )
             }
             {isEditOpen && <UpdateProfile
                 userID={userID}

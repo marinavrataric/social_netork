@@ -5,7 +5,6 @@ import Axios from 'axios';
 import { PostContext } from '../../context/PostContext';
 import { AppContext } from '../../context/AppContext';
 import { Input, Dropdown } from 'reactstrap';
-import moment from 'moment';
 import PostTime from './post-creation-time/PostTime';
 import FirstThreeComments from './single_comment/FirstThreeComments';
 import AllComments from './single_comment/AllComments';
@@ -35,7 +34,7 @@ interface Post {
     visibility: string
 }
 
-function SinglePost(props: any) {
+function SinglePost({post, diffDuration}: any) {
     const [isShown, setIsShown] = useState(false)
     const [clickedPostId, setClickedPostId] = useState()
     const [dropdownValue, setdropdownValue] = useState('public')
@@ -105,15 +104,7 @@ function SinglePost(props: any) {
 
     return (
         <div className="all-posts">
-            {props.updatedPosts && props.updatedPosts.map((post: Post) => {
-                const dateNow = new Date()
-                const startDate = moment(post.registration_date)
-                const timeEnd = moment(dateNow)
-                const diff = timeEnd.diff(startDate)
-                const diffDuration = moment.duration(diff)
-
-                return (
-                    post && (
+           
                         <div className="single-post-container" >
                             {/*delete post*/}
                             <div className="right-align">
@@ -217,9 +208,7 @@ function SinglePost(props: any) {
                                 <Input className="text-comment-input" placeholder='Add comment'></Input>
                             </form>
                         </div>
-                    )
-                );
-            })}
+                   
         </div>
     );
 }

@@ -5,6 +5,32 @@ import SinglePost from '../../components/single_post/SinglePost';
 import './posts.css';
 import { PostContext } from '../../context/PostContext';
 import { AppContext } from '../../context/AppContext';
+import moment from 'moment';
+
+
+interface Post {
+    _id: string,
+    content: string,
+    registration_date: string,
+    comments: [{
+        id: string,
+        text: string,
+        userID: {
+            first_name: string,
+            last_name: string,
+            profile_image: string,
+            _id: string
+        }
+    }],
+    likes: [string],
+    userID: {
+        first_name: string,
+        last_name: string,
+        profile_image: string,
+        _id: string
+    },
+    visibility: string
+}
 
 function Posts() {
     const [inputText, setInputText] = useState('');
@@ -58,13 +84,12 @@ function Posts() {
     const publicPosts = postsArray?.filter((post: any) => {
         if (post.visibility === 'Public') return post
     });
-    console.log('public', publicPosts)
 
     const postsPrivate = postsArray?.filter((post: any) => {
         if (post.visibility === 'Private') return post
     })
-    console.log('private', postsPrivate)
 
+    const dateNow = new Date()
 
 
     return (
@@ -78,7 +103,14 @@ function Posts() {
                 />
             </form>
             <div className="all-posts">
-                <SinglePost updatedPosts={publicPosts} />
+                {updatedPosts.map((post: Post) => {
+                    const startDate = moment(post.registration_date)
+                    const timeEnd = moment(dateNow)
+                    const diff = timeEnd.diff(startDate)
+                    const diffDuration = moment.duration(diff)
+                    return <SinglePost post={post} diffDuration={diffDuration}/>
+                }
+                )}
             </div>
         </div>
     );

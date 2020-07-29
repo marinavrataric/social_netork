@@ -21,8 +21,10 @@ interface User {
 }
 
 interface Post {
+    visibility: string,
     userID: {
-        _id: string
+        _id: string,
+        followers: any
     }
 }
 
@@ -80,6 +82,27 @@ function UserProfile() {
         Axios.put('/api/users/unfollow', body, config)
     }
 
+
+    // logika za followere
+    const [postsArray, setPostsArray] = useState([])
+    // get all posts
+    useEffect(() => {
+        const config: any = {
+            headers: {
+                'x-auth-token': `${storedToken}`,
+                'Content-Type': 'application/json',
+            }
+        }
+        Axios.get('/api/posts/comment', config)
+            .then((res) => setPostsArray(res.data))
+            .catch((err) => console.log(err));
+    }, []);
+
+    const privatePosts = postsArray?.filter((post: Post) => {
+        if (post.userID.followers.includes(userProfile._id)) return post
+    });
+    console.log(privatePosts)
+
     return (
         <div className="profile-container">
             <div className="user-info">
@@ -111,6 +134,7 @@ function UserProfile() {
                     ? <h4>No posts yet</h4>
                     : <SinglePost updatedPosts={usersPosts} />
                 }
+                <SinglePost updatedPosts={privatePosts}></SinglePost>
             </div>
             {isFollowingOpen &&
                 <Following
