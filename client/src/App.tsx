@@ -3,6 +3,7 @@ import NavigationRouter from './app_routes/NavigationRouter'
 import { AppContext } from './context/AppContext'
 import axios from 'axios'
 import { ReducerStateInterface } from './interfaces/ReducerStateInterface'
+import { config } from './constants/generalConstants'
 
 function App() {
     const [token, setToken] = useState('')
@@ -21,7 +22,6 @@ function App() {
             case 'REGISTER_SUCCESS':
             case 'LOGIN_SUCCESS':
                 localStorage.setItem('token', token)
-
                 return {
                     ...state,
                     isLoading: false,
@@ -54,9 +54,6 @@ function App() {
 
     // load all users
     useEffect(() => {
-        const config = {
-            headers: { "x-auth-token": `${storedToken}` }
-        }
         axios
             .get('/api/auth/users', config)
             .then(res => {
@@ -69,16 +66,11 @@ function App() {
             })
     }, [storedToken])
 
-
     // get user data and save ID
     useEffect(() => {
-        const config = {
-            headers: { "x-auth-token": `${storedToken}` }
-        }
         axios
             .get('/api/auth/user', config)
             .then(res => {
-                //console.log(res.data.user)
                 const user = res.data.user
                 setUserID(user._id)
             })

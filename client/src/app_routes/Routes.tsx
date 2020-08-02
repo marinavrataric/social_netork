@@ -9,7 +9,6 @@ import UserProfile from '../pages/user_profile/UserProfile';
 import { AppContext } from '../context/AppContext';
 import { PostContext } from '../context/PostContext';
 import Axios from 'axios';
-import Subscribed from '../pages/posts/Subscribed';
 
 interface allPostsProps {
     content: string;
@@ -108,9 +107,6 @@ function Routes() {
                     </PostContext.Provider>
                     : <Home />
                 }
-            </Route>
-            <Route path="/subscribed">
-                <Subscribed />
             </Route>
             <Route path="/logout">
                 <Logout />

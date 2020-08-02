@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
 import './profile.css'
-import avatar from '../../assets/avatar.png'
 import { useLocation } from 'react-router-dom'
 import SinglePost from '../../components/single_post/SinglePost'
 import { PostContext } from '../../context/PostContext'
@@ -11,14 +10,20 @@ import Following from '../../components/following/Following'
 import Followers from '../../components/followers/Followers'
 import { PostInterface } from '../../interfaces/PostInterface'
 import { UserInterface } from '../../interfaces/UserInterface'
-import { FollowUserInterface } from '../../interfaces/FollowUserInterface'
+import { config } from '../../constants/generalConstants'
+import moment from 'moment';
+import UserInfo from '../../components/user_info/UserInfo'
 
 function UserProfile() {
     const { updatedPosts } = useContext(PostContext)
-    const location = useLocation<UserInterface>()
     const { userID } = useContext(AppContext);
+
+    const location = useLocation<UserInterface>()
+
     const [isFollowingOpen, setIsFollowingOpen] = useState(false)
     const [isFollowersOpen, setIsFollowersOpen] = useState(false)
+
+    const dateNow = new Date()
 
     const userProfile = {
         _id: location.state._id,
@@ -33,15 +38,6 @@ function UserProfile() {
     // get users posts
     const allPostsCopy = updatedPosts
     const usersPosts = allPostsCopy.filter((post: PostInterface) => (post.userID && post.userID._id === userProfile._id))
-
-    const storedToken = localStorage.getItem('token')
-
-    const config = {
-        headers: {
-            'x-auth-token': `${storedToken}`,
-            'Content-Type': 'application/json',
-        }
-    }
 
     // follow
     const followUser = (id: any) => {
@@ -59,40 +55,9 @@ function UserProfile() {
         Axios.put('/api/users/unfollow', body, config)
     }
 
-
-    // logika za followere
-    const [postsArray, setPostsArray] = useState([])
-    // get all posts
-    useEffect(() => {
-        const config: any = {
-            headers: {
-                'x-auth-token': `${storedToken}`,
-                'Content-Type': 'application/json',
-            }
-        }
-        Axios.get('/api/posts/comment', config)
-            .then((res) => setPostsArray(res.data))
-            .catch((err) => console.log(err));
-    }, []);
-
-    const privatePosts = postsArray?.filter((post: PostInterface) => {
-        if (post.userID.followers.includes(userProfile._id)) return post
-    });
-    console.log(privatePosts)
-
     return (
         <div className="profile-container">
-            <div className="user-info">
-                <div className="img-circular">
-                    <img
-                        alt='avatar'
-                        className="user-profile-img2"
-                        src={userProfile.profile_image ? `http://localhost:5000/${userProfile.profile_image}` : avatar}
-                    ></img>
-                </div>
-                <p className="user-name">{userProfile.firstName} {userProfile.lastName}</p>
-                <p className="about-user">{userProfile.userBio}</p>
-            </div>
+            <UserInfo userProfile={userProfile} />
             <div className="user-posts">
                 <button className="btn-follow btn-follow-marg" onClick={() => setIsFollowersOpen(!isFollowersOpen)}>
                     <p className="follow-title">{userProfile.followers.length} {userProfile.followers && userProfile.followers.length < 2 ? 'follower' : 'followers'} </p>
@@ -108,10 +73,17 @@ function UserProfile() {
                 }
                 <hr className="hr"/>
                 {usersPosts.length === 0
-                    ? <h4>No posts yet</h4>
-                    : <SinglePost updatedPosts={usersPosts} />
+                ? <h3>No posts yet</h3>
+                :
+                usersPosts.map((post: PostInterface) => {
+                    const startDate = moment(post.registration_date)
+                    const timeEnd = moment(dateNow)
+                    const diff = timeEnd.diff(startDate)
+                    const diffDuration = moment.duration(diff)
+                    return <SinglePost post={post} diffDuration={diffDuration} />
                 }
-                <SinglePost updatedPosts={privatePosts}></SinglePost>
+                )
+            }
             </div>
             {isFollowingOpen &&
                 <Following

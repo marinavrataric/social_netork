@@ -50,7 +50,6 @@ function UpdatePhoto(props: any) {
         <div>
             <Modal isOpen={props.isPhotoModalOpen} toggle={() => props.setIsPhotoModalOpen(!props.isPhotoModalOpen)} backdrop="static">
                 {msgError && <Alert color="warning">{msgError}</Alert>}
-
                 <ModalHeader>Update Photo</ModalHeader>
                 <ModalBody>
                     <FormGroup>

@@ -17,7 +17,6 @@ function Links() {
                     <SingleNavItem exact={false} isAuth={state.isAuthenticated} routeName='Find people' routeAuth='/findPeople' routeNotAuth='/' />
                     <SingleNavItem exact={false} isAuth={state.isAuthenticated} routeName='Posts' routeAuth='/posts' routeNotAuth='/' />
                     <SingleNavItem exact={false} isAuth={state.isAuthenticated} routeName='My profile' routeAuth='/myProfile' routeNotAuth='/' />
-                    <SingleNavItem exact={false} isAuth={state.isAuthenticated} routeName='Subscribed' routeAuth='/subscribed' routeNotAuth='/' />
                     {state.isAuthenticated && 
                     <SingleNavItem exact={false} isAuth={state.isAuthenticated} routeName='Log out' routeAuth='/logout' routeNotAuth='/logout' logoutModal={logoutModal} setLogoutModal={setLogoutModal} />}
                 </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, FormGroup, Label, Input } from 'reactstrap'
 import Axios from 'axios'
+import { configWithoutToken } from '../constants/generalConstants'
 
 function UpdateProfile(props: any) {
 
@@ -13,7 +14,6 @@ function UpdateProfile(props: any) {
         e.preventDefault()
         props.setIsEditOpen(false)
 
-        const config: any = { header: { "Content-Type": "application/json" } }
         const body = {
             first_name: firstNameUpdated,
             last_name: lastNameUpdated,
@@ -21,7 +21,7 @@ function UpdateProfile(props: any) {
         }
 
         Axios
-            .put(`/api/users/${props.userID}`, body, config)
+            .put(`/api/users/${props.userID}`, body, configWithoutToken)
             .then(res => {
                 const user = res.data
                 props.setUserInfo({

@@ -1,9 +1,11 @@
 import React, { useState, useContext } from 'react'
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Label, Input, FormGroup, Alert } from 'reactstrap'
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from 'reactstrap'
 import axios from 'axios'
 import { AppContext } from '../context/AppContext'
+import { configWithoutToken } from '../constants/generalConstants'
+import SingleFormGroup from '../components/form_group/SingleFormGroup'
 
-function Register(props: any) {
+function Register({ toggle, modal }: any) {
 
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
@@ -13,24 +15,20 @@ function Register(props: any) {
 
     const { dispatch, setToken } = useContext(AppContext)
 
-    // register user
     const validateSignUp = (e: any) => {
         e.preventDefault()
-
-        const config: any = { header: { 'Content-Type': 'application/json' } }
         const user = {
             first_name: firstName,
             last_name: lastName,
             email,
             password
         }
-
         axios
-            .post('/api/users', user, config)
+            .post('/api/users', user, configWithoutToken)
             .then(res => {
                 setToken(res.data.token)
                 dispatch({ type: 'REGISTER_SUCCESS', payload: res.data })
-                props.toggle(false)
+                toggle(false)
             })
             .catch(err => {
                 setErrorMsg(err.response.data.msg)
@@ -38,44 +36,15 @@ function Register(props: any) {
             })
     }
 
-    const closeRegisterModal = () => {
-        props.toggle(false)
-    }
-
     return (
-        <Modal isOpen={props.modal} toggle={props.toggle} backdrop="static">
+        <Modal isOpen={modal} toggle={toggle} backdrop="static">
             {errorMsg && <Alert color="warning">{errorMsg}</Alert>}
-
             <ModalHeader>Sign Up</ModalHeader>
             <ModalBody>
-                <FormGroup>
-                    <Label>First Name</Label>
-                    <Input
-                        type="text"
-                        onChange={(e: any) => setFirstName(e.target.value)}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label>Last Name</Label>
-                    <Input
-                        type="text"
-                        onChange={(e: any) => setLastName(e.target.value)}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label>Email</Label>
-                    <Input
-                        type="email"
-                        onChange={(e: any) => setEmail(e.target.value)}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label>Password</Label>
-                    <Input
-                        type="password"
-                        onChange={(e: any) => setPassword(e.target.value)}
-                    />
-                </FormGroup>
+                <SingleFormGroup labelName='First Name' setValue={setFirstName} type={'text'} />
+                <SingleFormGroup labelName='Last Name' setValue={setLastName} type={'text'} />
+                <SingleFormGroup labelName='Email' setValue={setEmail} type={'email'} />
+                <SingleFormGroup labelName='Password' setValue={setPassword} type={'password'} />
             </ModalBody>
             <ModalFooter>
                 <Button
@@ -85,7 +54,7 @@ function Register(props: any) {
                 >Sign Up</Button>
                 <Button
                     color="danger"
-                    onClick={closeRegisterModal}
+                    onClick={() => toggle(false)}
                 >Cancel</Button>
             </ModalFooter>
         </Modal>

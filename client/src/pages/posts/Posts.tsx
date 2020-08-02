@@ -4,27 +4,21 @@ import Axios from 'axios';
 import SinglePost from '../../components/single_post/SinglePost';
 import './posts.css';
 import { PostContext } from '../../context/PostContext';
-import { AppContext } from '../../context/AppContext';
 import moment from 'moment';
 import { PostInterface } from '../../interfaces/PostInterface';
+import { config } from '../../constants/generalConstants';
+import { AppContext } from '../../context/AppContext';
 
 function Posts() {
     const [inputText, setInputText] = useState('');
     const { setPosts, updatedPosts } = useContext(PostContext);
     const { userID } = useContext(AppContext)
 
-    const storedToken = localStorage.getItem('token');
-    const config: any = {
-        headers: {
-            'x-auth-token': `${storedToken}`,
-            'Content-Type': 'application/json'
-        }
-    };
+    const dateNow = new Date()
 
     // create post
     const submitPost = (e: any) => {
         e.preventDefault()
-
         const postData = {
             content: inputText
         }
@@ -43,29 +37,21 @@ function Posts() {
         e.target[0].value = ''
     };
 
-    const [postsArray, setPostsArray] = useState([])
-    // get all posts
+    // get all posts (all public and followings posts)
+    const [postsArray, setPostsArray] = useState<PostInterface[]>()
     useEffect(() => {
-        const config: any = {
-            headers: {
-                'x-auth-token': `${storedToken}`,
-                'Content-Type': 'application/json',
-            }
-        }
         Axios.get('/api/posts/comment', config)
             .then((res) => setPostsArray(res.data))
             .catch((err) => console.log(err));
     }, []);
 
-    const publicPosts = postsArray?.filter((post: any) => {
-        if (post.visibility === 'Public') return post
-    });
-
-    const postsPrivate = postsArray?.filter((post: any) => {
-        if (post.visibility === 'Private') return post
-    })
-
-    const dateNow = new Date()
+    const availablePosts = postsArray?.reduce((acc: PostInterface[], post) => {
+        if (post.userID.followers && post.userID.followers.some(follower => follower === userID)) {
+            acc.push(post);
+        }
+        if (post.visibility === 'Public') acc.push(post)
+        return acc;
+    }, []);
 
     return (
         <div className="center-post-div">
@@ -78,12 +64,12 @@ function Posts() {
                 />
             </form>
             <div className="all-posts">
-                {updatedPosts.map((post: PostInterface) => {
+                {availablePosts?.map((post: PostInterface) => {
                     const startDate = moment(post.registration_date)
                     const timeEnd = moment(dateNow)
                     const diff = timeEnd.diff(startDate)
                     const diffDuration = moment.duration(diff)
-                    return <SinglePost post={post} diffDuration={diffDuration}/>
+                    return <SinglePost post={post} diffDuration={diffDuration} />
                 }
                 )}
             </div>

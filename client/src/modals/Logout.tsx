@@ -4,12 +4,11 @@ import { AppContext } from '../context/AppContext'
 import { useHistory } from "react-router-dom";
 
 function Logout() {
-
     const { logoutModal, setLogoutModal, dispatch } = useContext(AppContext)
 
-    const toggle = () => setLogoutModal(!logoutModal)
-
     const history = useHistory()
+
+    const toggle = () => setLogoutModal(!logoutModal)
 
     const logoutUser = () => {
         dispatch({ type: 'LOG_OUT_USER' })

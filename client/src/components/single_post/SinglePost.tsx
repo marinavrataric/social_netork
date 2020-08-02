@@ -69,6 +69,8 @@ function SinglePost({ post, diffDuration }: any) {
             .catch(err => console.log(err))
     }
 
+    //console.log(post)
+
     return (
         <div className="all-posts">
             <div className="single-post-container" >

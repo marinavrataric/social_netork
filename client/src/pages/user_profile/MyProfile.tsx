@@ -6,7 +6,6 @@ import { AppContext } from '../../context/AppContext'
 import UpdateProfile from '../../modals/UpdateProfile'
 import { PostContext } from '../../context/PostContext'
 import UpdatePhoto from '../../modals/UpdatePhoto'
-import avatar from '../../assets/avatar.png'
 import Following from '../../components/following/Following'
 import Followers from '../../components/followers/Followers'
 import '../../components/followers/follow.css'
@@ -14,6 +13,8 @@ import { Input } from 'reactstrap'
 import moment from 'moment';
 import { FollowUserInterface } from '../../interfaces/FollowUserInterface'
 import { PostInterface } from '../../interfaces/PostInterface'
+import { config } from '../../constants/generalConstants'
+import UserDashboard from '../../components/user_dashboard/UserDashboard'
 
 function MyProfile() {
     const [userInfo, setUserInfo] = useState({
@@ -26,8 +27,8 @@ function MyProfile() {
     const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false)
     const [following, setFollowing] = useState(0)
     const [followers, setFollowers] = useState(0)
-    const [followingUsers, setFollowingUsers] = useState<Array<FollowUserInterface>>([{_id: '', first_name: '', last_name: '', profile_image: '' }])
-    const [followersUsers, setFollowersUsers] = useState<Array<FollowUserInterface>>([{_id: '', first_name: '', last_name: '', profile_image: '' }])
+    const [followingUsers, setFollowingUsers] = useState<Array<FollowUserInterface>>([{ _id: '', first_name: '', last_name: '', profile_image: '' }])
+    const [followersUsers, setFollowersUsers] = useState<Array<FollowUserInterface>>([{ _id: '', first_name: '', last_name: '', profile_image: '' }])
     const [isFollowingOpen, setIsFollowingOpen] = useState(false)
     const [isFollowersOpen, setIsFollowersOpen] = useState(false)
 
@@ -35,6 +36,7 @@ function MyProfile() {
     const { updatedPosts } = useContext(PostContext)
 
     const storedToken = localStorage.getItem('token')
+    const dateNow = new Date()
 
     // get users posts
     const allPostsCopy = updatedPosts
@@ -67,17 +69,9 @@ function MyProfile() {
     const [inputText, setInputText] = useState('');
     const { setPosts } = useContext(PostContext);
 
-    const config: any = {
-        headers: {
-            'x-auth-token': `${storedToken}`,
-            'Content-Type': 'application/json'
-        }
-    };
-
     // create post
     const submitPost = (e: any) => {
         e.preventDefault()
-
         const postData = {
             content: inputText
         }
@@ -92,39 +86,25 @@ function MyProfile() {
                 setPosts(item.content, item._id, item.registration_date, item.likes);
             })
             .catch((err) => console.log(err));
-
         e.target[0].value = ''
     };
-
-    const dateNow = new Date()
 
     return (
         <div className="profile-container">
             <button className="btn-edit" onClick={() => setIsEditOpen(true)}>
                 <i className="fa fa-edit"></i>
             </button>
-            <div className="user-info">
-                <div className="img-circular">
-                    <img
-                        alt='avatar'
-                        className="user-profile-img"
-                        src={userInfo.userPhoto ? userInfo.userPhoto : avatar}
-                        onClick={() => setIsPhotoModalOpen(true)}
-                    ></img>
-                    <div className="middle">
-                        <p className="update-photo">Update photo</p>
-                    </div>
-                </div>
-                <p className="user-name">{userInfo.firstName} {userInfo.lastName}</p>
-                <p className="about-user">{userInfo.userBio}</p>
-                <button className="btn-follow" onClick={() => setIsFollowersOpen(!isFollowersOpen)}>
-                    <p className="follow-title">{followers} {followers && followers < 2 ? 'follower' : 'followers'} </p>
-                </button>
-                <button className="btn-follow" onClick={() => setIsFollowingOpen(!isFollowingOpen)}>
-                    <p className="follow-title">{following} following</p>
-                </button>
-            </div>
-            <hr/>
+            <UserDashboard
+                userInfo={userInfo}
+                setIsPhotoModalOpen={setIsPhotoModalOpen}
+                setIsFollowersOpen={setIsFollowersOpen}
+                isFollowersOpen={isFollowersOpen}
+                followers={followers}
+                following={following}
+                setIsFollowingOpen={setIsFollowingOpen}
+                isFollowingOpen={isFollowingOpen}
+            />
+            <hr />
             <form onSubmit={submitPost}>
                 <Input
                     type="text"
@@ -135,13 +115,13 @@ function MyProfile() {
             </form>
             {usersPosts.length === 0
                 ? <h3>No posts yet</h3>
-                :  
+                :
                 usersPosts.map((post: PostInterface) => {
                     const startDate = moment(post.registration_date)
                     const timeEnd = moment(dateNow)
                     const diff = timeEnd.diff(startDate)
                     const diffDuration = moment.duration(diff)
-                    return <SinglePost post={post} diffDuration={diffDuration}/>
+                    return <SinglePost post={post} diffDuration={diffDuration} />
                 }
                 )
             }
