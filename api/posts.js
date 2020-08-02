@@ -16,7 +16,6 @@ router.put('/createPost/:id', auth, (req, res) => {
         new: true
     }).exec((err, result) => {
         if (err) res.status(422).json({ msg: err })
-        console.log(result)
         res.json(result)
     })
 })
@@ -33,7 +32,6 @@ router.delete("/comment/:id/:comment_id", auth, (req, res) => {
         new: true
     }).exec((err, result) => {
         if (err) res.status(422).json({ msg: err })
-        console.log(result)
         res.json(result)
     })
 })

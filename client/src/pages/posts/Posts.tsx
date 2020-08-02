@@ -49,7 +49,7 @@ function Posts() {
         if (post.userID.followers && post.userID.followers.some(follower => follower === userID)) {
             acc.push(post);
         }
-        if (post.visibility === 'Public') acc.push(post)
+        else if (post.visibility === 'Public') acc.push(post)
         return acc;
     }, []);
 
