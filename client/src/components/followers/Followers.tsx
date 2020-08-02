@@ -3,7 +3,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap'
 import { FollowUserInterface } from '../../interfaces/FollowUserInterface'
 import SingleFollowUser from '../single_follow_user/SingleFollowUser'
 
-function Followers({followersUsers, isFollowersOpen, setIsFollowersOpen}: any) {
+function Followers({ followersUsers, isFollowersOpen, setIsFollowersOpen }: any) {
     const followersUserList = followersUsers.map((followers: FollowUserInterface) => <SingleFollowUser following={followers} />)
 
     return (

@@ -46,7 +46,7 @@ function UserProfile() {
         }
         Axios.put('/api/users/follow', body, config)
     }
-    
+
     // unfollow
     const unfollowUser = (id: any) => {
         const body = {
@@ -71,19 +71,19 @@ function UserProfile() {
                     :
                     <Button color="info" className="btn-follow-user" onClick={() => unfollowUser(userProfile._id)}>Unfollow</Button>
                 }
-                <hr className="hr"/>
+                <hr className="hr" />
                 {usersPosts.length === 0
-                ? <h3>No posts yet</h3>
-                :
-                usersPosts.map((post: PostInterface) => {
-                    const startDate = moment(post.registration_date)
-                    const timeEnd = moment(dateNow)
-                    const diff = timeEnd.diff(startDate)
-                    const diffDuration = moment.duration(diff)
-                    return <SinglePost post={post} diffDuration={diffDuration} />
+                    ? <h3>No posts yet</h3>
+                    :
+                    usersPosts.map((post: PostInterface) => {
+                        const startDate = moment(post.registration_date)
+                        const timeEnd = moment(dateNow)
+                        const diff = timeEnd.diff(startDate)
+                        const diffDuration = moment.duration(diff)
+                        return <SinglePost post={post} diffDuration={diffDuration} />
+                    }
+                    )
                 }
-                )
-            }
             </div>
             {isFollowingOpen &&
                 <Following
