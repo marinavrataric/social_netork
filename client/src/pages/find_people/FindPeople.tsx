@@ -10,10 +10,13 @@ import UserCard from '../../components/user_card/UserCard';
 function FindPeople() {
     const { allUsers, userID } = useContext(AppContext);
 
-    const [isOpenUserProfile, setIsOpenUserProfile] = useState(false);
     const [inputSearch, setInputSearch] = useState('')
 
-    const allUserWithoutAuthUser = allUsers.filter((user: UserInterface) => (user._id !== userID))
+    const allUserWithoutAuthUser = allUsers.filter((user: UserInterface) => {
+        if (user._id !== userID){
+            return user
+        }
+    })
 
     // follow
     const followUser = (id: any) => {
@@ -49,7 +52,6 @@ function FindPeople() {
             userID={userID}
             followUser={followUser}
             unfollowUser={unfollowUser}
-            setIsOpenUserProfile={setIsOpenUserProfile}
         />
     ))
 

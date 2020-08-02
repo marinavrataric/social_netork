@@ -3,7 +3,7 @@ import { Button } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import avatar from '../../assets/avatar.png';
 
-function UserCard({ user, userID, followUser, unfollowUser, setIsOpenUserProfile }: any) {
+function UserCard({ user, userID, followUser, unfollowUser }: any) {
     return (
         <div className="user-container" key={user._id}>
             <div className="user-card">
@@ -22,7 +22,7 @@ function UserCard({ user, userID, followUser, unfollowUser, setIsOpenUserProfile
                         :
                         <Button color="info" className="btn-find" onClick={() => unfollowUser(user._id)}>Unfollow</Button>
                     }{' '}
-                    <Button color="info" className="btn-find" onClick={() => setIsOpenUserProfile(true)}>
+                    {(user.followers.map((follower: { _id: string }) => follower._id)).includes(userID) && <Button color="info" className="btn-find">
                         <Link
                             to={{
                                 pathname: `/userProfile/${user._id}`,
@@ -32,7 +32,7 @@ function UserCard({ user, userID, followUser, unfollowUser, setIsOpenUserProfile
                         >
                             <p className="btn-name">View Profile</p>
                         </Link>
-                    </Button>
+                    </Button>}
                 </div>
             </div>
         </div>

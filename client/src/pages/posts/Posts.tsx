@@ -45,7 +45,9 @@ function Posts() {
             .catch((err) => console.log(err));
     }, []);
 
-    const availablePosts = postsArray?.reduce((acc: PostInterface[], post) => {
+    const withoutCurrentUser = postsArray?.filter((post: PostInterface) => (post.userID._id !== userID))
+
+    const availablePosts = withoutCurrentUser?.reduce((acc: PostInterface[], post) => {
         if (post.userID.followers && post.userID.followers.some(follower => follower === userID)) {
             acc.push(post);
         }
