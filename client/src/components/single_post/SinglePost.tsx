@@ -74,20 +74,28 @@ function SinglePost({ post, diffDuration }: any) {
     return (
         <div className="all-posts">
             <div className="single-post-container" >
-                <div className="right-align">
-                    {post.userID._id === userID &&
-                        <DropdownPostOptions post={post} setVisible={setVisible} dropdownValue={dropdownValue} setdropdownValue={setdropdownValue} />
-                    }
-                    {post.userID._id === userID &&
-                        <button
-                            className="btn btn-delete"
-                            onClick={() => post._id && handleDeletePost(post._id)}
-                        ><i className="fa fa-remove" style={{ color: "red", fontSize: '20px' }}></i>
-                        </button>
-                    }
+                <div className='row-info'>
+                    <div className="left-align-user">
+                        <UserInfoComment post={post} PostTime={PostTime} diffDuration={diffDuration} />
+                    </div>
+                    <div className="right-align-user">
+                        <div className='option-left'>
+                            {post.userID._id === userID &&
+                                <DropdownPostOptions post={post} setVisible={setVisible} dropdownValue={dropdownValue} setdropdownValue={setdropdownValue} />
+                            }
+                        </div>
+                        <div className='option-right'>
+                            {post.userID._id === userID &&
+                                <button
+                                    className="btn btn-delete"
+                                    onClick={() => post._id && handleDeletePost(post._id)}
+                                ><i className="fa fa-remove" style={{ color: "red", fontSize: '20px' }}></i>
+                                </button>
+                            }
+                        </div>
+                    </div>
                 </div>
-                <div className="left-align">
-                    <UserInfoComment post={post} PostTime={PostTime} diffDuration={diffDuration} />
+                <div className="row-content">
                     <div className="user-post-text-container">
                         <h2 className="user-post-text">{post.content}</h2>
                     </div>

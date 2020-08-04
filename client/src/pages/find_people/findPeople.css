@@ -5,6 +5,9 @@
     left: 0;
     right: 0;
     margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 .user-card {
     width: 550px;
@@ -22,12 +25,8 @@
     float: left;
 }
 .right {
-    display: inline-block;
-    margin-top: 40px;
     text-align: center;
-    position: absolute;
-    left: 55%;
-    transform: translateX(-55%);
+    margin-top: 6%;
 }
 .circular {
     position: relative;

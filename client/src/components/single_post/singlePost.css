@@ -8,8 +8,10 @@
     text-align: left;
     margin: 10px 0;
     border-radius: 20px;
-    padding: 10px 20px;
+    padding: 15px 20px;
     font-family: 'Mukta';
+    display: flex;
+    flex-flow: column;
 }
 .btn {
     border: none;
@@ -21,14 +23,33 @@
 .fa-remove {
     color: red;
 }
-.right-align {
-    float: right;
+.row-info{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
-.left-align {
-    float: left;
-    width: 100%;
-    /* margin-top: -27px; */
+.left-align-user {
+    display: flex;
+    flex-direction: row;
 }
+
+.right-align-user {
+    display: flex;
+    flex-direction: row;
+}
+.option-left{
+
+}
+.option-right{
+
+}
+.user-name-photo {
+    display: flex;
+    text-align: left;
+    flex-direction: row;
+width: auto;
+}
+
 .number-of-likes {
     display: inline-block;
     margin: 0;
@@ -66,21 +87,14 @@ hr {
     margin: 0 auto;
     float: left;
 }
-.user-name-photo {
-    display: inline-block;
-    text-align: left;
-    margin-left: 10px;
-}
+
 .user-name-post {
     font-size: 15px;
-    float: right;
     margin: 0;
     margin-left: 10px;
-    width: 270px;
     font-weight: 800;
 }
 .right-user-name-post {
-    float: right;
     margin-right: 40px;
     margin-top: 5px;
 }
@@ -115,13 +129,13 @@ hr {
 .comment-container {
     background-color: rgba(214, 214, 214, 0.664);
     margin: 10px 0;
-    margin-left: 10px;
+    
     border-radius: 20px;
 }
 .text-comment-input {
     border-radius: 20px;
-    margin: 10px;
     font-size: 14px;
+    margin-top: 10px;
 }
 .img-comment-circular-mini {
     width: 25px;
