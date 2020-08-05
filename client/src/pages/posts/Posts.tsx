@@ -65,7 +65,6 @@ function Posts() {
                     placeholder="What is on your mind?"
                 />
             </form>
-            <div>HELLO</div>
             <div className="all-posts">
                 {availablePosts?.map((post: PostInterface) => {
                     const startDate = moment(post.registration_date)
