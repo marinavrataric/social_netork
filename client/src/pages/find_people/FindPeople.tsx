@@ -13,7 +13,7 @@ function FindPeople() {
     const [inputSearch, setInputSearch] = useState('')
 
     const allUserWithoutAuthUser = allUsers.filter((user: UserInterface) => {
-        if (user._id !== userID){
+        if (user._id !== userID) {
             return user
         }
     })

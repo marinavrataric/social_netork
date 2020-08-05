@@ -4,6 +4,7 @@ import Axios from 'axios'
 import { AppContext } from '../context/AppContext'
 import { configWithoutToken } from '../constants/generalConstants'
 import SingleFormGroup from '../components/form_group/SingleFormGroup'
+import { useHistory } from 'react-router-dom'
 
 function Login({ toggle, modal }: any) {
 
@@ -12,6 +13,7 @@ function Login({ toggle, modal }: any) {
     const [errorMsg, setErrorMsg] = useState('')
 
     const { setToken, dispatch } = useContext(AppContext)
+    const history = useHistory()
 
     const loginUser = (e: any) => {
         e.preventDefault()
@@ -30,6 +32,7 @@ function Login({ toggle, modal }: any) {
                 setErrorMsg(err.response.data.msg)
                 dispatch({ type: 'LOGIN_FAILED' })
             })
+        history.push('/myProfile')
     }
 
     return (

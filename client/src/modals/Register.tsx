@@ -4,6 +4,7 @@ import axios from 'axios'
 import { AppContext } from '../context/AppContext'
 import { configWithoutToken } from '../constants/generalConstants'
 import SingleFormGroup from '../components/form_group/SingleFormGroup'
+import { useHistory } from 'react-router-dom'
 
 function Register({ toggle, modal }: any) {
 
@@ -14,6 +15,7 @@ function Register({ toggle, modal }: any) {
     const [errorMsg, setErrorMsg] = useState('')
 
     const { dispatch, setToken } = useContext(AppContext)
+    const history = useHistory()
 
     const validateSignUp = (e: any) => {
         e.preventDefault()
@@ -34,6 +36,7 @@ function Register({ toggle, modal }: any) {
                 setErrorMsg(err.response.data.msg)
                 dispatch({ type: "REGISTER_FAILED" })
             })
+        history.push('/myProfile')
     }
 
     return (

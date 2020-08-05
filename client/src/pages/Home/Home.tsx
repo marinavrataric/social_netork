@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import './home.css'
 import Register from '../../modals/Register'
 import Login from '../../modals/Login'
+import { AppContext } from '../../context/AppContext'
 
 function Home() {
     const [modalSignUp, setModalSignUp] = useState(false)
@@ -9,6 +10,8 @@ function Home() {
 
     const [modalSignIn, setModalSignIn] = useState(false)
     const toggleSignIn = () => setModalSignIn(!modalSignIn)
+
+    const {state} = useContext(AppContext)
 
     return (
         <div className="home">
@@ -24,8 +27,8 @@ function Home() {
                         onClick={toggleSignIn}
                     >Sign In</button>
                 </div>
-                {modalSignUp && <Register toggle={toggleSignUp} modal={modalSignUp} />}
-                {modalSignIn && <Login toggle={toggleSignIn} modal={modalSignIn} />}
+                {modalSignUp && !state.isAuthenticated && <Register toggle={toggleSignUp} modal={modalSignUp} />}
+                {modalSignIn && !state.isAuthenticated && <Login toggle={toggleSignIn} modal={modalSignIn} />}
             </div>
         </div>
     )

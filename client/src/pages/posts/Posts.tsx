@@ -38,14 +38,14 @@ function Posts() {
     };
 
     // get all posts (all public and followings posts)
-    const [postsArray, setPostsArray] = useState<PostInterface[]>()
+    const [postsArray, setPostsArray] = useState<PostInterface[]>([])
     useEffect(() => {
         Axios.get('/api/posts/comment', config)
             .then((res) => setPostsArray(res.data))
             .catch((err) => console.log(err));
     }, []);
 
-    const withoutCurrentUser = postsArray?.filter((post: PostInterface) => (post.userID._id !== userID))
+    const withoutCurrentUser = postsArray?.filter((post: PostInterface) => (post.userID && post.userID._id !== userID))
 
     const availablePosts = withoutCurrentUser?.reduce((acc: PostInterface[], post) => {
         if (post.userID.followers && post.userID.followers.some(follower => follower === userID)) {

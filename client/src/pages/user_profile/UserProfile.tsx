@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from 'react'
 import './profile.css'
 import { useLocation } from 'react-router-dom'
 import SinglePost from '../../components/single_post/SinglePost'
-import { PostContext } from '../../context/PostContext'
 import { Button } from 'reactstrap'
 import Axios from 'axios'
 import { AppContext } from '../../context/AppContext'
@@ -15,7 +14,6 @@ import moment from 'moment';
 import UserInfo from '../../components/user_info/UserInfo'
 
 function UserProfile() {
-    const { updatedPosts } = useContext(PostContext)
     const { userID } = useContext(AppContext);
 
     const location = useLocation<UserInterface>()
@@ -35,16 +33,13 @@ function UserProfile() {
         followers: location.state.followers
     }
 
-    // get users posts
-    const allPostsCopy = updatedPosts
-    const usersPosts = allPostsCopy.filter((post: PostInterface) => (post.userID && post.userID._id === userProfile._id))
-
     // follow
     const followUser = (id: any) => {
         const body = {
             followId: id
         }
         Axios.put('/api/users/follow', body, config)
+        Axios.get('/api/posts/comment', config)
     }
 
     // unfollow
@@ -53,7 +48,17 @@ function UserProfile() {
             unfollowId: id
         }
         Axios.put('/api/users/unfollow', body, config)
+        Axios.get('/api/posts/comment', config)
     }
+
+    const [postsArray, setPostsArray] = useState<PostInterface[]>()
+    useEffect(() => {
+        Axios.get('/api/posts/comment', config)
+            .then((res) => setPostsArray(res.data))
+            .catch((err) => console.log(err));
+    }, []);
+
+    const userPosts = postsArray?.filter((post: PostInterface) => (post.userID && post.userID._id === userProfile._id))   
 
     return (
         <div className="profile-container">
@@ -72,10 +77,10 @@ function UserProfile() {
                     <Button color="info" className="btn-follow-user" onClick={() => unfollowUser(userProfile._id)}>Unfollow</Button>
                 }
                 <hr className="hr" />
-                {usersPosts.length === 0
+                {userPosts && userPosts.length === 0
                     ? <h3>No posts yet</h3>
                     :
-                    usersPosts.map((post: PostInterface) => {
+                    userPosts && userPosts.map((post: PostInterface) => {
                         const startDate = moment(post.registration_date)
                         const timeEnd = moment(dateNow)
                         const diff = timeEnd.diff(startDate)
